@@ -1,0 +1,111 @@
+<div class="dashboard-container">
+  <header class="dashboard-header">
+    <div class="header-content">
+      <h1>Dashboard</h1>
+      <div class="user-info">
+        <span class="welcome-text">Hello, {{ currentUser }}</span>
+        <button (click)="logout()" class="btn btn-logout">Cerrar Sesión</button>
+      </div>
+    </div>
+  </header>
+
+  <div class="dashboard-layout">
+    <!-- Sidebar -->
+    <aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+      <div class="sidebar-header">
+        <h3 *ngIf="!sidebarCollapsed">Proyectos</h3>
+        <div class="sidebar-controls">
+          <button (click)="loadUserProjects()" class="btn btn-refresh-small" [disabled]="loading" *ngIf="!sidebarCollapsed">
+            ↻
+          </button>
+          <button (click)="toggleSidebar()" class="btn btn-toggle-sidebar">
+            {{ sidebarCollapsed ? '→' : '←' }}
+          </button>
+        </div>
+      </div>
+
+      <!-- Projects in sidebar -->
+      <div class="sidebar-content" *ngIf="!sidebarCollapsed">
+        <!-- Loading state -->
+        <div *ngIf="loading" class="sidebar-loading">
+          <div class="loading-spinner-small"></div>
+          <span>Cargando...</span>
+        </div>
+
+        <!-- Error state -->
+        <div *ngIf="error && !loading" class="sidebar-error">
+          <p class="error-text">Error al cargar</p>
+          <button (click)="loadUserProjects()" class="btn btn-retry-small">Reintentar</button>
+        </div>
+
+        <!-- Projects list in sidebar -->
+        <div *ngIf="!loading && !error" class="projects-sidebar">
+          <div *ngIf="projects.length === 0" class="no-projects-sidebar">
+            <p>Sin proyectos</p>
+          </div>
+
+          <div *ngIf="projects.length > 0" class="projects-list">
+            <div *ngFor="let project of projects" class="project-item" [class.active]="selectedProject?.id === project.id">
+              <div class="project-header" (click)="selectProject(project)">
+                <div class="project-info">
+                  <h4>{{ project.name }}</h4>
+                </div>
+                <div class="project-dropdown" (click)="toggleProjectExpansion(project, $event)" 
+                     [class.expanded]="expandedProjects.has(project.id)">
+                  ▼
+                </div>
+              </div>
+              
+              <div class="project-details" [class.expanded]="expandedProjects.has(project.id)">
+                <div class="project-stats">
+                  <span class="stat" *ngIf="hasGeneratedCode(project)">
+                    <span class="stat-label">Código Generado</span>
+                  </span>
+                  <span class="stat" *ngIf="hasMutantCycles(project)">
+                    <span class="stat-label">Mutant Cycle</span>
+                  </span>
+                  <span class="stat" *ngIf="hasTestCases(project)">
+                    <span class="stat-label">Test Case</span>
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main content area -->
+    <main class="main-content">
+      <div class="content-header">
+        <h2>Start a new Project</h2>
+      </div>
+
+      <div class="tools-list">
+        <div class="tool-card">
+          <h3 class="tool-title">Quaco (Quantum Annealing Code Generator)</h3>
+          <p class="tool-description">
+            Un generador de código cuántico para problemas de optimización. Los problemas pueden describirse de manera genérica (con sumatorios, productorios y variables simbólicas) e instanciarse con datos.
+          </p>
+          <a href="#" class="tool-link">Visitar Quaco</a>
+        </div>
+
+        <div class="tool-card">
+          <h3 class="tool-title">Quco (Quantum Code Generation)</h3>
+          <p class="tool-description">
+            Genera circuitos y programas cuánticos a partir de tablas de verdad y mediante algoritmos genéticos.
+          </p>
+          <a href="#" class="tool-link">Visitar Quco</a>
+        </div>
+
+        <div class="tool-card">
+          <h3 class="tool-title">Qumu (Quantum Mutation)</h3>
+          <p class="tool-description">
+            Sirve para generar y ejecutar mutantes cuánticos. La entrada es un circuito en formato quirk. La herramienta genera los mutantes tanto en este mismo formato como en Qiskit. Dispone de diversos algoritmos de ejecución. La ejecución de los mutantes se produce en el servidor.
+          </p>
+          <a href="#" class="tool-link">Visitar Qumu</a>
+        </div>
+      </div>
+    </main>
+  </div>
+</div>

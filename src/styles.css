@@ -1,1 +1,110 @@
 /* You can add global styles to this file, and also import other style files */
+
+/* Importar variables de tema */
+@import './app/styles/variables.css';
+
+/* Importar fuentes modernas */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+
+/* Global reset and base styles */
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-family);
+  line-height: 1.6;
+  color: var(--color-text-primary);
+  background-color: var(--color-bg-primary);
+  font-weight: var(--font-weight-normal);
+  letter-spacing: -0.01em;
+}
+
+html, body {
+  height: 100%;
+}
+
+/* Utility classes */
+.text-center {
+  text-align: center;
+}
+
+.mb-20 {
+  margin-bottom: var(--spacing-lg);
+}
+
+.mt-20 {
+  margin-top: var(--spacing-lg);
+}
+
+/* Form styles */
+.form-control {
+  transition: all var(--transition-normal);
+}
+
+.form-control:focus {
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(157, 192, 169, 0.3);
+  border-color: var(--color-secondary);
+}
+
+/* Button styles */
+.btn {
+  border: none;
+  border-radius: var(--radius-md);
+  font-size: 16px;
+  cursor: pointer;
+  transition: all var(--transition-normal);
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+  font-family: var(--font-family);
+  font-weight: var(--font-weight-medium);
+  letter-spacing: -0.02em;
+}
+
+.btn:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+.btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+/* Header styles */
+h1, h2, h3, h4, h5, h6 {
+  color: var(--color-text-secondary);
+  font-weight: var(--font-weight-semibold);
+  margin-bottom: 0.5rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+}
+
+h2 {
+  font-size: 1.8rem;
+}
+
+h3 {
+  font-size: 1.5rem;
+}
+
+/* Link styles */
+a,
+a:visited,
+a:hover {
+  color: var(--color-primary);
+  text-decoration: none;
+  transition: color var(--transition-normal);
+}
+
+a:hover {
+  color: var(--color-accent);
+}

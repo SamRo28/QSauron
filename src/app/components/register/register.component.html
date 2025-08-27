@@ -1,0 +1,86 @@
+<div class="register-container">
+  <div class="register-card">
+    <div class="register-header">
+      <h2>Crear Cuenta</h2>
+      <p>Regístrate para acceder al sistema</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+      <!-- Email field -->
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input 
+          type="email" 
+          id="email"
+          formControlName="email" 
+          class="form-control"
+          [class.is-invalid]="submitted && f['email'].errors"
+          placeholder="Ingresa tu email">
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">El email es requerido</div>
+          <div *ngIf="f['email'].errors['email']">El email debe tener un formato válido</div>
+        </div>
+      </div>
+
+      <!-- Password field -->
+      <div class="form-group">
+        <label for="password">Contraseña:</label>
+        <input 
+          type="password" 
+          id="password"
+          formControlName="pwd" 
+          class="form-control"
+          [class.is-invalid]="submitted && f['pwd'].errors"
+          placeholder="Ingresa tu contraseña">
+        <div *ngIf="submitted && f['pwd'].errors" class="invalid-feedback">
+          <div *ngIf="f['pwd'].errors['required']">La contraseña es requerida</div>
+          <div *ngIf="f['pwd'].errors['minlength']">La contraseña debe tener al menos 6 caracteres</div>
+        </div>
+      </div>
+
+      <!-- Confirm Password field -->
+      <div class="form-group">
+        <label for="confirmPassword">Confirmar Contraseña:</label>
+        <input 
+          type="password" 
+          id="confirmPassword"
+          formControlName="confirmPassword" 
+          class="form-control"
+          [class.is-invalid]="submitted && (f['confirmPassword'].errors || registerForm.errors?.['passwordMismatch'])"
+          placeholder="Confirma tu contraseña">
+        <div *ngIf="submitted && f['confirmPassword'].errors" class="invalid-feedback">
+          <div *ngIf="f['confirmPassword'].errors['required']">La confirmación de contraseña es requerida</div>
+        </div>
+        <div *ngIf="submitted && registerForm.errors?.['passwordMismatch']" class="invalid-feedback">
+          Las contraseñas no coinciden
+        </div>
+      </div>
+
+      <!-- Success message -->
+      <div *ngIf="success" class="alert alert-success">{{ success }}</div>
+
+      <!-- Error message -->
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <!-- Submit button -->
+      <div class="form-group">
+        <button 
+          type="submit" 
+          class="btn btn-primary btn-block"
+          [disabled]="loading">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Creando cuenta...' : 'Crear Cuenta' }}
+        </button>
+      </div>
+
+      <!-- Login link -->
+      <div class="form-group text-center">
+        <p>¿Ya tienes cuenta? 
+          <a href="#" (click)="navigateToLogin(); $event.preventDefault()" class="login-link">
+            Inicia sesión aquí
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>
