@@ -1,43 +1,41 @@
 /* Global styles for the application */
 :host {
   display: block;
-  height: 100vh;
-  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
-}
-
-/* Reset and base styles */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
-
-/* Main content styling to match Qumuclient theme */
-.main-content {
-  transition: all 0.3s ease;
   min-height: 100vh;
-  background-color: #f0f7f3;
-  color: #1f2937;
 }
 
-/* Header styles similar to Qumuclient */
-h1, h2, h3, h4, h5, h6 {
-  margin: 8px 0;
-  color: #4c5866;
+/* Main content styling */
+.main-content {
+  transition: all var(--transition-normal);
+  min-height: 100vh;
+  /* Background is handled by body in styles.css */
+  background: transparent;
+  color: var(--text-primary);
+}
+
+/* Header styles */
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin: 0.5rem 0;
+  color: var(--text-secondary);
   font-weight: 600;
   letter-spacing: -0.02em;
 }
 
 p {
   margin: 0;
-  color: #50816f;
+  color: var(--text-secondary);
 }
 
 /* Content wrapper */
 .content {
   display: flex;
-  margin: 32px auto;
-  padding: 0 24px;
+  margin: var(--spacing-lg) auto;
+  padding: 0 var(--spacing-lg);
   max-width: 1200px;
   flex-direction: column;
   align-items: center;
@@ -47,11 +45,11 @@ p {
 a,
 a:visited,
 a:hover {
-  color: #50816f;
+  color: var(--accent-secondary);
   text-decoration: none;
-  transition: color 0.3s ease;
+  transition: color var(--transition-normal);
 }
 
 a:hover {
-  color: #8ab095;
+  color: var(--accent-primary);
 }

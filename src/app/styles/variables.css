@@ -1,58 +1,103 @@
 /* Qumuclient Theme Variables */
-/* Matching the design system from Qumuclient/Frontend */
+/* Based on estilo_frontend.css */
 
 :root {
-  /* Color Palette */
-  --color-primary: #50816f;           /* Verde principal */
-  --color-secondary: #9dc0a9;         /* Verde mint claro */
-  --color-accent: #8ab095;            /* Verde intermedio */
-  --color-border: #718f84;            /* Verde borde */
-  
+  /* Light Mode (Default) */
+  --bg-primary: #f5f7fa;
+  --bg-secondary: #e8f5e9;
+  --bg-gradient: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+
+  /* Glass Backgrounds */
+  --glass-bg: rgba(255, 255, 255, 0.8);
+  --glass-bg-hover: rgba(255, 255, 255, 0.9);
+  --glass-bg-card: rgba(255, 255, 255, 0.7);
+  --glass-bg-sidebar: rgba(255, 255, 255, 0.8);
+
   /* Text Colors */
-  --color-text-primary: #1f2937;      /* Gris oscuro principal */
-  --color-text-secondary: #4c5866;    /* Gris medio para headers */
-  --color-text-muted: #50816f;        /* Verde para texto secundario */
-  --color-text-light: #f8fafc;        /* Blanco/gris muy claro */
-  
-  /* Background Colors */
-  --color-bg-primary: #f0f7f3;        /* Fondo principal verde claro */
-  --color-bg-card: #ffffff;           /* Fondo de tarjetas */
-  --color-bg-input: #fafafa;          /* Fondo de inputs */
-  --color-bg-hover: #e8f5ea;          /* Fondo hover */
-  
-  /* Status Colors */
-  --color-success: #1e40af;           /* Azul para éxito */
-  --color-success-bg: #f0f9ff;        /* Fondo de éxito */
-  --color-error: #dc2626;             /* Rojo para errores */
-  --color-error-bg: #fdf2f2;          /* Fondo de error */
-  
-  /* Spacing */
-  --spacing-xs: 4px;
-  --spacing-sm: 8px;
-  --spacing-md: 16px;
-  --spacing-lg: 24px;
-  --spacing-xl: 32px;
-  --spacing-2xl: 48px;
-  
-  /* Border Radius */
-  --radius-sm: 4px;
-  --radius-md: 8px;
-  --radius-lg: 12px;
-  
-  /* Shadows */
-  --shadow-sm: 0 4px 14px rgba(157, 192, 169, 0.2);
-  --shadow-md: 0 8px 24px rgba(157, 192, 169, 0.2);
-  --shadow-lg: 0 20px 40px rgba(80, 129, 111, 0.15);
-  
-  /* Typography */
-  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', sans-serif;
+  --text-primary: #1a1f2e;
+  --text-secondary: #4a5568;
+  --text-muted: #718096;
+
+  /* Accent Colors (Emerald) */
+  --accent-primary: #10b981;
+  /* Emerald 500 */
+  --accent-secondary: #059669;
+  /* Emerald 600 */
+  --accent-tertiary: #34d399;
+  /* Emerald 400 */
+  --accent-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+
+  /* Borders & Shadows */
+  --border-glass: rgba(16, 185, 129, 0.4);
+  --border-glass-light: rgba(16, 185, 129, 0.25);
+
+  --shadow-glass: rgba(6, 95, 70, 0.15);
+  --shadow-glass-strong: rgba(6, 95, 70, 0.25);
+  --card-shadow: 0 8px 32px rgba(6, 95, 70, 0.15);
+  --card-shadow-hover: 0 12px 48px rgba(6, 95, 70, 0.2);
+
+  /* Other */
+  --toggle-bg: rgba(255, 255, 255, 0.7);
+  --toggle-border: rgba(16, 185, 129, 0.3);
+
+  /* Layout */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 16px;
+  --radius-xl: 20px;
+
+  /* Legacy variable mappings to maintain backward compatibility where needed */
+  --color-primary: var(--accent-secondary);
+  --color-secondary: var(--bg-secondary);
+  --color-accent: var(--accent-tertiary);
+  --color-border: var(--border-glass);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-bg-primary: var(--bg-primary);
+  --color-bg-card: var(--glass-bg-card);
+
+  --shadow-md: var(--card-shadow);
+
+  --font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   --font-weight-normal: 400;
   --font-weight-medium: 500;
   --font-weight-semibold: 600;
   --font-weight-bold: 700;
-  
-  /* Transitions */
-  --transition-fast: 0.15s ease;
+
   --transition-normal: 0.3s ease;
-  --transition-slow: 0.5s ease;
+}
+
+/* Dark Mode Support */
+[data-theme='dark'] {
+  --bg-primary: #020617;
+  --bg-secondary: #0f172a;
+  --bg-gradient: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+
+  --glass-bg: rgba(2, 6, 23, 0.7);
+  --glass-bg-hover: rgba(15, 23, 42, 0.8);
+  --glass-bg-card: rgba(2, 6, 23, 0.6);
+  --glass-bg-sidebar: rgba(2, 6, 23, 0.85);
+
+  --text-primary: #e2e8f0;
+  --text-secondary: #94a3b8;
+  --text-muted: #64748b;
+
+  --accent-primary: #34d399;
+  --accent-secondary: #10b981;
+  --accent-tertiary: #6ee7b7;
+  --accent-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+
+  --border-glass: rgba(16, 185, 129, 0.3);
+  --border-glass-light: rgba(16, 185, 129, 0.15);
+
+  --shadow-glass: rgba(0, 0, 0, 0.3);
+  --shadow-glass-strong: rgba(0, 0, 0, 0.5);
+  --card-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+  --card-shadow-hover: 0 12px 48px rgba(0, 0, 0, 0.5);
+
+  --toggle-bg: rgba(15, 23, 42, 0.6);
+  --toggle-border: rgba(16, 185, 129, 0.3);
 }

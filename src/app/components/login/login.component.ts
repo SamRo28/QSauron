@@ -17,6 +17,7 @@ export class LoginComponent implements OnInit {
   submitted = false;
   error = '';
   returnUrl: string;
+  showPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -54,14 +55,33 @@ export class LoginComponent implements OnInit {
     this.loading = true;
     this.authService.login(this.loginForm.value)
       .subscribe({
-        next: (token: string) => {
-          this.router.navigate([this.returnUrl]);
+        next: (response: string) => {
+          if (response === '2fa') {
+            // Empty string means 2FA is required
+            // We may want to pass the email or other context if needed, but 
+            // authService handles the initial login call.
+            // Storing email temporarily for 2FA might be useful if not already handled.
+            // For now, redirect to 2FA code entry.
+            // Also, check if 2fa-code component expects state or session info.
+            // AuthService sets session on success, but here it's not full success yet.
+            // Ensure 2fa-code knows who is verifying.
+            sessionStorage.setItem('email', this.loginForm.value.email);
+            this.router.navigate(['/2fa-code']);
+          } else {
+            // Normal success
+            this.authService.setSession(this.loginForm.value.email);
+            this.router.navigate(['/dashboard']);
+          }
         },
         error: (error: Error) => {
           this.error = error.message;
           this.loading = false;
         }
       });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
   }
 
   navigateToRegister() {

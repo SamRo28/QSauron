@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { BehaviorSubject, Observable, throwError } from 'rxjs';
+import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
@@ -35,19 +35,19 @@ export interface ProjectRequest {
 export class AuthService {
   private readonly API_URL = 'http://localhost:8080/users';
   private readonly PROJECTS_URL = 'http://localhost:8080/projects';
-  private readonly TOKEN_KEY = 'auth_token';
+  // Token is now handled via HttpOnly cookie
   private readonly USER_KEY = 'current_user';
-  
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasToken());
+
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasUser());
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
-  
+
   private currentUserSubject = new BehaviorSubject<string | null>(this.getCurrentUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
   constructor(
     private http: HttpClient,
     private router: Router
-  ) {}
+  ) { }
 
   /**
    * Register a new user
@@ -61,15 +61,12 @@ export class AuthService {
 
   /**
    * Login user
+   * Returns validation string:
+   * - "" (empty) -> 2FA required
+   * - <token/string> -> Success
    */
   login(user: User): Observable<string> {
-    return this.http.post<string>(`${this.API_URL}/login`, user, { responseType: 'text' as 'json' })
-      .pipe(
-        tap(token => {
-          this.setSession(token, user.email);
-        }),
-        catchError(this.handleError)
-      );
+    return this.http.post<string>(`${this.API_URL}/login`, user, { responseType: 'text' as 'json' });
   }
 
   /**
@@ -82,11 +79,9 @@ export class AuthService {
 
   /**
    * Get authentication token
+   * @deprecated Token is now in HttpOnly cookie
    */
   getToken(): string | null {
-    if (typeof window !== 'undefined') {
-      return localStorage.getItem(this.TOKEN_KEY);
-    }
     return null;
   }
 
@@ -94,8 +89,26 @@ export class AuthService {
    * Check if user is authenticated
    */
   isAuthenticated(): boolean {
-    return this.hasToken();
+    return this.hasUser();
   }
+
+  loadQRCode(): Observable<any> {
+    if (typeof window === 'undefined') {
+      return of(null);
+    }
+    let email = sessionStorage.getItem('email');
+    // Note: withCredentials will be handled by interceptor
+    return this.http.post<any>(`${this.API_URL}/activate2FA`, { email }).pipe(
+      tap(data => {
+        console.log('QR Code Data:', data);
+      })
+    );
+  }
+
+  verify2FACode(email: string, code: string): Observable<string> {
+    return this.http.post<string>(`${this.API_URL}/verify2FACode`, { email, code }, { responseType: 'text' as 'json' });
+  }
+
 
   /**
    * Get current user email
@@ -112,26 +125,28 @@ export class AuthService {
    */
   getUserProjects(): Observable<Project[]> {
     const email = this.getCurrentUser();
-    const token = this.getToken();
-    
-    if (!email || !token) {
+
+    if (!email) {
       return throwError(() => new Error('User not authenticated'));
     }
-    
-    const request: ProjectRequest = {
-      email: email,
-      token: token
+
+    // Token param removed from request object, backend should read cookie
+    // But keeping existing structure if backend expects body params.
+    // Ideally backend should trigger off cookie. 
+    // Assuming backend endpoint /getAllByUser expects { email: ... } now?
+    // The previous code sent { email, token }. Providing empty token or just email.
+    const request: any = {
+      email: email
     };
-    
+
     return this.http.post<Project[]>(`${this.PROJECTS_URL}/getAllByUser`, request)
       .pipe(
         catchError(this.handleError)
       );
   }
 
-  private setSession(token: string, email: string): void {
+  public setSession(email: string): void {
     if (typeof window !== 'undefined') {
-      localStorage.setItem(this.TOKEN_KEY, token);
       localStorage.setItem(this.USER_KEY, email);
       this.isAuthenticatedSubject.next(true);
       this.currentUserSubject.next(email);
@@ -140,17 +155,16 @@ export class AuthService {
 
   private clearSession(): void {
     if (typeof window !== 'undefined') {
-      localStorage.removeItem(this.TOKEN_KEY);
       localStorage.removeItem(this.USER_KEY);
       this.isAuthenticatedSubject.next(false);
       this.currentUserSubject.next(null);
     }
   }
 
-  private hasToken(): boolean {
+  private hasUser(): boolean {
     if (typeof window !== 'undefined') {
-      const token = localStorage.getItem(this.TOKEN_KEY);
-      return token !== null && token.length > 0;
+      const user = localStorage.getItem(this.USER_KEY);
+      return user !== null && user.length > 0;
     }
     return false;
   }
@@ -164,7 +178,7 @@ export class AuthService {
 
   private handleError(error: HttpErrorResponse): Observable<never> {
     let errorMessage = 'An unknown error occurred';
-    
+
     if (error.error instanceof ErrorEvent) {
       // Client-side error
       errorMessage = `Error: ${error.error.message}`;
@@ -188,7 +202,7 @@ export class AuthService {
           errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
       }
     }
-    
+
     return throwError(() => new Error(errorMessage));
   }
 }

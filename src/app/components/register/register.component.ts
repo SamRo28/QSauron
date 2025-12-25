@@ -17,6 +17,8 @@ export class RegisterComponent implements OnInit {
   submitted = false;
   error = '';
   success = '';
+  showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -43,7 +45,7 @@ export class RegisterComponent implements OnInit {
   passwordMatchValidator(form: FormGroup) {
     const password = form.get('pwd');
     const confirmPassword = form.get('confirmPassword');
-    
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       return { passwordMismatch: true };
     }
@@ -65,13 +67,15 @@ export class RegisterComponent implements OnInit {
 
     this.loading = true;
     const { email, pwd } = this.registerForm.value;
-    
+
     this.authService.register({ email, pwd })
       .subscribe({
         next: () => {
-          this.success = 'Usuario registrado exitosamente. Redirigiendo al login...';
+          this.success = 'Usuario registrado exitosamente. Redirigiendo a configuración 2FA...';
+          // Store email for 2FA setup
+          sessionStorage.setItem('email', email);
           setTimeout(() => {
-            this.router.navigate(['/login']);
+            this.router.navigate(['/2fa-qr']);
           }, 2000);
         },
         error: (error: Error) => {
@@ -79,6 +83,14 @@ export class RegisterComponent implements OnInit {
           this.loading = false;
         }
       });
+  }
+
+  togglePassword() {
+    this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   navigateToLogin() {
