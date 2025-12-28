@@ -17,7 +17,7 @@ export interface Project {
   id: number;
   name: string;
   mutantCycles: any[];
-  testSuite: any;
+  testSuite: any[];
   qProgram: any;
   users: {
     id: string;
