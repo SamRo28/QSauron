@@ -65,6 +65,11 @@
     font-weight: 700;
     padding: 0;
     font-family: 'JetBrains Mono', monospace;
+    border: 2px solid var(--border-glass);
+}
+
+.code-digit:focus {
+    border-color: var(--accent-primary);
 }
 
 .link-primary {

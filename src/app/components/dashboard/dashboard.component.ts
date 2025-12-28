@@ -1,7 +1,8 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService, Project } from '../../services/auth.service';
 import { Router } from '@angular/router';
+import { ThemeService } from '../../services/theme.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -19,14 +20,26 @@ export class DashboardComponent implements OnInit {
   sidebarCollapsed: boolean = false;
   expandedProjects: Set<number> = new Set();
 
+  showUserMenu: boolean = false;
+
+  private themeService = inject(ThemeService);
+
+  get isDark() {
+    return this.themeService.isDark;
+  }
+
+  get logoUrl() {
+    return '/logo.svg';
+  }
+
   constructor(
     private authService: AuthService,
     private router: Router
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.currentUser = this.authService.getCurrentUser();
-    
+
     // Subscribe to authentication state changes
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
@@ -44,7 +57,7 @@ export class DashboardComponent implements OnInit {
   loadUserProjects() {
     this.loading = true;
     this.error = null;
-    
+
     this.authService.getUserProjects().subscribe({
       next: (projects) => {
         this.projects = projects;
@@ -64,6 +77,14 @@ export class DashboardComponent implements OnInit {
 
   selectProject(project: Project) {
     this.selectedProject = project;
+  }
+
+  toggleUserMenu() {
+    this.showUserMenu = !this.showUserMenu;
+  }
+
+  toggleTheme() {
+    this.themeService.toggleTheme();
   }
 
   toggleSidebar() {

@@ -6,32 +6,35 @@
 }
 
 .dashboard-header {
-  background: var(--glass-bg-sidebar);
-  /* Semi-transparent header */
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border-bottom: 1px solid var(--border-glass-light);
-  color: var(--text-primary);
+  background: linear-gradient(180deg, rgba(6, 95, 70, 0.85) 0%, rgba(6, 78, 59, 0.9) 100%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-bottom: 1px solid rgba(52, 211, 153, 0.3);
+  color: #ecfdf5;
   padding: 16px 0;
   position: relative;
   z-index: 1000;
-  box-shadow: 0 4px 12px var(--shadow-glass);
+  box-shadow: 0 4px 12px rgba(6, 78, 59, 0.25);
 }
 
 .header-content {
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
+  width: 100%;
+  padding: 0 32px;
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+/* Logo Styles */
+.dashboard-logo {
+  filter: brightness(0) invert(1);
 }
 
 .dashboard-header h1 {
   margin: 0;
   font-weight: 600;
   font-size: 1.8rem;
-  color: var(--text-primary);
+  color: #ecfdf5;
   letter-spacing: -0.02em;
 }
 
@@ -39,29 +42,96 @@
   display: flex;
   align-items: center;
   gap: 16px;
+  margin-left: auto;
+  /* Push to the right */
 }
 
 .welcome-text {
+  font-size: 0.95rem;
+  font-weight: 500;
+  color: rgba(236, 253, 245, 0.8);
+}
+
+.user-dropdown-container {
+  position: relative;
+}
+
+.user-icon-btn {
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ecfdf5;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.user-icon-btn:hover {
+  background: rgba(255, 255, 255, 0.2);
+  border-color: rgba(255, 255, 255, 0.3);
+  transform: translateY(-1px);
+}
+
+.dropdown-menu {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  width: 200px;
+  padding: 8px;
+  z-index: 1001;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  /* Keep dropdown using global glass style for contrast, or match sidebar? 
+     Usually dropdowns should contrast or pop out. Keeping global glass for now to match other dropdowns, 
+     but user might want it green too. Let's keep it standard glass for legibility against the green header. */
+}
+
+.dropdown-item {
+  width: 100%;
+  padding: 10px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text-primary);
+  text-align: left;
+  cursor: pointer;
+  border-radius: var(--radius-sm);
+  display: flex;
+  align-items: center;
+  gap: 10px;
   font-size: 0.9rem;
   font-weight: 500;
-  color: var(--text-secondary);
+  transition: all 0.2s ease;
 }
 
-.btn-logout {
-  background: rgba(239, 68, 68, 0.1);
+.dropdown-item:hover {
+  background: var(--glass-bg-hover);
+  color: var(--accent-primary);
+}
+
+.dropdown-item .icon {
+  width: 16px;
+  height: 16px;
+  stroke-width: 2px;
+}
+
+.dropdown-divider {
+  height: 1px;
+  background: var(--border-glass-light);
+  margin: 4px 0;
+}
+
+.dropdown-item.danger {
   color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  cursor: pointer;
-  font-size: 0.85rem;
-  transition: all 0.3s ease;
-  font-weight: 500;
 }
 
-.btn-logout:hover {
-  background: rgba(239, 68, 68, 0.2);
-  transform: translateY(-1px);
+.dropdown-item.danger:hover {
+  background: rgba(239, 68, 68, 0.1);
 }
 
 /* Layout */
@@ -73,11 +143,12 @@
 /* Sidebar */
 .sidebar {
   width: 280px;
-  background: var(--glass-bg-sidebar);
-  backdrop-filter: blur(10px);
-  border-right: 1px solid var(--border-glass);
+  background: linear-gradient(180deg, rgba(6, 95, 70, 0.85) 0%, rgba(6, 78, 59, 0.9) 100%);
+  backdrop-filter: blur(12px) saturate(180%);
+  border-right: 1px solid rgba(52, 211, 153, 0.3);
   overflow-y: auto;
   transition: width 0.3s ease;
+  box-shadow: 4px 0 24px rgba(6, 78, 59, 0.25);
 }
 
 .sidebar.collapsed {
@@ -86,7 +157,7 @@
 
 .sidebar-header {
   padding: 20px;
-  border-bottom: 1px solid var(--border-glass-light);
+  border-bottom: 1px solid rgba(52, 211, 153, 0.3);
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -101,7 +172,7 @@
   margin: 0;
   font-size: 1.1rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #ecfdf5;
 }
 
 .sidebar-controls {
@@ -112,9 +183,9 @@
 
 .btn-refresh-small,
 .btn-toggle-sidebar {
-  background: transparent;
-  border: none;
-  color: var(--text-muted);
+  background: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #ecfdf5;
   cursor: pointer;
   padding: 6px;
   border-radius: 4px;
@@ -123,8 +194,8 @@
 
 .btn-refresh-small:hover,
 .btn-toggle-sidebar:hover {
-  background-color: var(--glass-bg-hover);
-  color: var(--text-primary);
+  background-color: rgba(255, 255, 255, 0.2);
+  color: white;
 }
 
 .sidebar-content {
@@ -140,15 +211,15 @@
 .loading-spinner-small {
   width: 20px;
   height: 20px;
-  border: 2px solid var(--border-glass-light);
-  border-top: 2px solid var(--accent-primary);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-top: 2px solid #34d399;
   border-radius: 50%;
   animation: spin 1s linear infinite;
   margin: 0 auto 10px;
 }
 
 .sidebar-error .error-text {
-  color: #ef4444;
+  color: #fca5a5;
   font-size: 0.85rem;
   margin-bottom: 10px;
 }
@@ -166,7 +237,7 @@
 .no-projects-sidebar {
   padding: 20px;
   text-align: center;
-  color: var(--text-muted);
+  color: rgba(236, 253, 245, 0.6);
   font-size: 0.9rem;
 }
 
@@ -175,7 +246,7 @@
 }
 
 .project-item {
-  border-bottom: 1px solid var(--border-glass-light);
+  border-bottom: 1px solid rgba(52, 211, 153, 0.1);
   transition: all 0.2s ease;
 }
 
@@ -188,24 +259,24 @@
 }
 
 .project-item:hover .project-header {
-  background-color: var(--glass-bg-hover);
+  background-color: rgba(6, 95, 70, 0.4);
 }
 
 .project-item.active .project-header {
-  background-color: rgba(16, 185, 129, 0.1);
-  /* Emerald tint */
-  border-left: 3px solid var(--accent-primary);
+  background-color: rgba(6, 78, 59, 0.6);
+  /* Darker emerald tint */
+  border-left: 3px solid #10b981;
 }
 
 .project-info h4 {
   margin: 0;
   font-size: 0.95rem;
   font-weight: 600;
-  color: var(--text-primary);
+  color: #ecfdf5;
 }
 
 .project-dropdown {
-  color: var(--text-muted);
+  color: rgba(236, 253, 245, 0.6);
   font-size: 0.8rem;
   transition: transform 0.2s ease;
   cursor: pointer;
@@ -213,11 +284,83 @@
 }
 
 .project-dropdown:hover {
-  color: var(--text-primary);
+  color: #ecfdf5;
 }
 
-.project-dropdown.expanded {
+.expand-icon {
+  transition: transform 0.2s ease;
+}
+
+.project-dropdown.expanded .expand-icon {
+  transform: rotate(90deg);
+}
+
+.sidebar-controls .btn-toggle-sidebar svg {
+  transition: transform 0.2s ease;
+}
+
+.sidebar-controls .btn-refresh-small svg {
+  transition: transform 0.2s ease;
+}
+
+.btn-toggle-sidebar:hover {
+  transform: scale(1.05);
+}
+
+.btn-toggle-sidebar:hover svg {
+  transform: rotate(90deg);
+}
+
+.btn-refresh-small:hover svg {
   transform: rotate(180deg);
+}
+
+.btn-refresh-small:active {
+  transform: scale(0.95);
+}
+
+/* Tree Icons Animations */
+.project-icon,
+.circuit-icon,
+.mutant-icon {
+  transition: transform 0.2s ease, filter 0.2s ease;
+  display: inline-block;
+}
+
+.project-item:hover .project-icon,
+.project-item:hover .circuit-icon,
+.project-item:hover .mutant-icon {
+  transform: scale(1.15);
+}
+
+.project-item.active .project-icon,
+.project-item.active .circuit-icon,
+.project-item.active .mutant-icon {
+  transform: scale(1.1);
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+}
+
+.project-icon {
+  color: #10b981;
+  /* Emerald 500 */
+}
+
+.mr-1 {
+  margin-right: 0.25rem;
+}
+
+.mr-2 {
+  margin-right: 0.5rem;
+}
+
+.circuit-icon {
+  color: #10b981;
+  /* Emerald 500 */
+}
+
+.mutant-icon {
+  color: #34d399;
+  /* Emerald 400 */
 }
 
 .project-details {

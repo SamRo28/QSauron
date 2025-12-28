@@ -46,6 +46,31 @@ export class RegisterComponent implements OnInit {
     const password = form.get('pwd');
     const confirmPassword = form.get('confirmPassword');
 
+    // Strict Password Rules
+    if (password && password.value) {
+      const value = password.value;
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasNumeric = /[0-9]/.test(value);
+      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+      const minLength = value.length >= 8;
+
+      if (!hasUpperCase || !hasLowerCase || !hasNumeric || !hasSpecialChar || !minLength) {
+        password.setErrors({
+          ...password.errors,
+          strictPassword: true
+        });
+      } else {
+        // Clear strictPassword error if valid, preserving other errors if any
+        if (password.errors) {
+          delete password.errors['strictPassword'];
+          if (Object.keys(password.errors).length === 0) {
+            password.setErrors(null);
+          }
+        }
+      }
+    }
+
     if (password && confirmPassword && password.value !== confirmPassword.value) {
       return { passwordMismatch: true };
     }
@@ -54,6 +79,17 @@ export class RegisterComponent implements OnInit {
 
   // Convenience getter for easy access to form fields
   get f() { return this.registerForm.controls; }
+
+  // Password validation helpers for UI
+  get passwordValue(): string {
+    return this.registerForm.get('pwd')?.value || '';
+  }
+
+  get hasMinLength() { return this.passwordValue.length >= 8; }
+  get hasUpperCase() { return /[A-Z]/.test(this.passwordValue); }
+  get hasLowerCase() { return /[a-z]/.test(this.passwordValue); }
+  get hasNumeric() { return /[0-9]/.test(this.passwordValue); }
+  get hasSpecialChar() { return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(this.passwordValue); }
 
   onSubmit() {
     this.submitted = true;
@@ -71,7 +107,7 @@ export class RegisterComponent implements OnInit {
     this.authService.register({ email, pwd })
       .subscribe({
         next: () => {
-          this.success = 'Usuario registrado exitosamente. Redirigiendo a configuración 2FA...';
+          this.success = 'User registered successfully. Redirecting to 2FA setup...';
           // Store email for 2FA setup
           sessionStorage.setItem('email', email);
           setTimeout(() => {

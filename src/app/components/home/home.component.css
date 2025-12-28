@@ -1,0 +1,241 @@
+/* Layout */
+.home-container {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    color: var(--text-primary, #ffffff);
+}
+
+/* Header */
+.glass-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    background: var(--glass-bg, rgba(255, 255, 255, 0.05));
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--border-glass, rgba(255, 255, 255, 0.1));
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.logo-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.logo-text {
+    font-weight: 700;
+    font-size: 1.25rem;
+    /* Updated gradient: Green to Dark Green */
+    background: linear-gradient(135deg, var(--accent-primary), #022c22);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.nav-links {
+    display: flex;
+    gap: 2rem;
+}
+
+.nav-link {
+    color: var(--text-muted, #94a3b8);
+    font-weight: 500;
+    transition: color 0.2s;
+}
+
+.nav-link:hover {
+    color: var(--accent-primary, #10B981);
+}
+
+.glass-btn-sm {
+    padding: 0.5rem 1rem;
+    font-size: 0.9rem;
+}
+
+/* Hero Section */
+.hero-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: center;
+    padding: 4rem 2rem;
+    position: relative;
+    overflow: hidden;
+    gap: 1.5rem;
+}
+
+.hero-content {
+    max-width: 800px;
+    position: relative;
+    z-index: 10;
+}
+
+.hero-title {
+    font-size: 3rem;
+    font-weight: 800;
+    margin-bottom: 1.5rem;
+    line-height: 1.2;
+    color: var(--text-primary);
+}
+
+.hero-subtitle {
+    font-size: 1.25rem;
+    color: var(--text-muted, #94a3b8);
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+}
+
+.glass-btn-lg {
+    padding: 1rem 2.5rem;
+    font-size: 1.125rem;
+    background: var(--accent-primary);
+    /* Ensure green pop */
+    color: #fff;
+    border: none;
+}
+
+.glass-btn-lg:hover {
+    background: var(--accent-secondary);
+}
+
+
+/* Pipeline Integration (Curved Diagram) */
+.pipeline-integration {
+    position: relative;
+    width: 100%;
+    max-width: 900px;
+    height: 250px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+    justify-content: center;
+    margin: 1rem auto;
+}
+
+.connection-line {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.energy-path {
+    stroke-dasharray: 10;
+    animation: dash 30s linear infinite;
+}
+
+@keyframes dash {
+    to {
+        stroke-dashoffset: -1000;
+    }
+}
+
+.cards-overlay {
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 50px;
+    /* Padding to match the curve start/end points approx */
+}
+
+/* Hero Cards (Nodes) */
+.hero-card {
+    width: 200px;
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+    background: var(--glass-bg-card);
+    border: 1px solid var(--border-glass);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.hero-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-glass-strong);
+    border-color: var(--accent-primary);
+}
+
+.hero-card h4 {
+    margin: 0;
+    font-size: 1.25rem;
+    color: var(--text-primary);
+    font-weight: 700;
+}
+
+.card-icon-sm {
+    width: 48px;
+    height: 48px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 0.25rem;
+}
+
+.step-badge {
+    font-size: 0.7rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent-primary);
+    font-weight: 600;
+    margin-top: 0.25rem;
+}
+
+/* Animations */
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+
+
+/* Responsive */
+@media (max-width: 768px) {
+    .pipeline-integration {
+        height: auto;
+    }
+
+    .cards-overlay {
+        flex-direction: column;
+        gap: 2rem;
+        padding: 0;
+    }
+
+    .connection-line {
+        display: none;
+        /* Hide curve on mobile */
+    }
+
+    .hero-title {
+        font-size: 2rem;
+    }
+}

@@ -1,0 +1,109 @@
+<div class="home-container">
+    <!-- 1. Header -->
+    <header class="glass-header">
+        <div class="logo-section">
+            <div class="logo-icon">
+                <img src="/logo.svg" alt="QSauron Logo" width="32" height="32">
+            </div>
+            <span class="logo-text">QSauron</span>
+        </div>
+
+        <nav class="nav-links">
+            <a href="#" class="nav-link">QuCo</a>
+            <a href="#" class="nav-link">QuTe</a>
+            <a href="#" class="nav-link">QuMu</a>
+        </nav>
+
+        <div class="cta-section" style="display: flex; gap: 1rem;">
+            <a routerLink="/login" class="glass-btn glass-btn-secondary glass-btn-sm">Log In</a>
+            <a routerLink="/register" class="glass-btn glass-btn-sm">Sign Up</a>
+        </div>
+    </header>
+
+    <!-- 2. Hero Section -->
+    <section class="hero-section">
+        <div class="hero-content">
+            <h1 class="hero-title">Master the Quantum Development Life Cycle.</h1>
+            <p class="hero-subtitle">
+                "QSauron unifies the workflow: Generates optimized code with QuCo, ensures quality with test cases in
+                QuTe,
+                and validates the robustness of your tests through circuit mutation with QuMu."
+            </p>
+
+            <!-- Integrated Pipeline Diagram -->
+            <div class="pipeline-integration">
+                <!-- Curved Energy Line SVG -->
+                <svg class="connection-line" width="900" height="200" viewBox="0 0 900 200" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <!-- Path that curves through the card positions (Centers: 150, 450, 750) -->
+                    <path d="M150 100 C 250 60, 350 140, 450 100 S 650 60, 750 100" stroke="url(#gradient-line)"
+                        stroke-width="3" fill="none" class="energy-path" />
+
+                    <defs>
+                        <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
+                            <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.2" />
+                            <stop offset="50%" stop-color="var(--accent-primary)" stop-opacity="1" />
+                            <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0.2" />
+                        </linearGradient>
+                    </defs>
+                </svg>
+
+                <!-- Card Container Overlay -->
+                <div class="cards-overlay">
+                    <!-- Card 1: QuCo -->
+                    <div class="hero-card glass-card" style="animation-delay: 0s;">
+                        <div class="card-icon-sm">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path d="M7 8L3 12L7 16" stroke="#10B981" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M17 8L21 12L17 16" stroke="#10B981" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M14 4L10 20" stroke="#10B981" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h4>QuCo</h4>
+                        <span class="step-badge">GENERATE</span>
+                    </div>
+
+                    <!-- Card 2: QuTe -->
+                    <div class="hero-card glass-card" style="animation-delay: 1.5s;">
+                        <div class="card-icon-sm">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M11 19C15.4183 19 19 15.4183 19 11C19 6.58172 15.4183 3 11 3C6.58172 3 3 6.58172 3 11C3 15.4183 6.58172 19 11 19Z"
+                                    stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M21 21L16.65 16.65" stroke="#10B981" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h4>QuTe</h4>
+                        <span class="step-badge">TEST</span>
+                    </div>
+
+                    <!-- Card 3: QuMu -->
+                    <div class="hero-card glass-card" style="animation-delay: 3s;">
+                        <div class="card-icon-sm">
+                            <svg width="24" height="24" viewBox="0 0 24 24" fill="none"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path
+                                    d="M12 22C17.5228 22 22 17.5228 22 12C22 6.47715 17.5228 2 12 2C6.47715 2 2 6.47715 2 12C2 17.5228 6.47715 22 12 22Z"
+                                    stroke="#10B981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                                <path d="M9 9L15 15" stroke="#10B981" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                                <path d="M15 9L9 15" stroke="#10B981" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round" />
+                            </svg>
+                        </div>
+                        <h4>QuMu</h4>
+                        <span class="step-badge">MUTATE</span>
+                    </div>
+                </div>
+            </div>
+
+            <a routerLink="/login" class="glass-btn glass-btn-lg animate-fade-in-up">Comenzar el Flujo de Trabajo</a>
+        </div>
+    </section>
+</div>

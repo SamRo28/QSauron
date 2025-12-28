@@ -42,6 +42,16 @@
   margin-bottom: 30px;
 }
 
+.logo-container {
+  margin-bottom: 1.5rem;
+  display: flex;
+  justify-content: center;
+}
+
+.logo-container img {
+  filter: drop-shadow(0 0 8px rgba(16, 185, 129, 0.4));
+}
+
 .register-header h2 {
   color: var(--text-primary);
   margin-bottom: 10px;
@@ -209,4 +219,50 @@
 
 .password-toggle-btn:hover {
   color: #64ffda;
+}
+
+/* Password requirements list */
+.password-requirements {
+  margin-top: 10px;
+  font-size: 0.85rem;
+  background: rgba(255, 255, 255, 0.03);
+  padding: 12px;
+  border-radius: var(--radius-md);
+  border: 1px solid var(--border-glass);
+}
+
+.req-title {
+  margin: 0 0 8px 0;
+  font-weight: 600;
+  color: var(--text-muted);
+}
+
+.req-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.req-list li {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+  color: var(--text-muted);
+  transition: color 0.2s;
+}
+
+.req-list li.valid {
+  color: var(--accent-primary);
+}
+
+.req-list li.invalid {
+  color: var(--text-muted);
+  opacity: 0.7;
+}
+
+.req-list li .icon {
+  font-weight: bold;
+  display: inline-block;
+  width: 14px;
 }

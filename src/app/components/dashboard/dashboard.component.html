@@ -1,10 +1,57 @@
 <div class="dashboard-container">
   <header class="dashboard-header">
     <div class="header-content">
+      <img [src]="logoUrl" alt="Q-Sauron" class="dashboard-logo mr-4"
+        style="height: 40px; width: auto; margin-right: 1rem;">
       <h1>Dashboard</h1>
       <div class="user-info">
         <span class="welcome-text">Hello, {{ currentUser }}</span>
-        <button (click)="logout()" class="btn btn-logout">Cerrar Sesión</button>
+        <div class="user-dropdown-container">
+          <button class="user-icon-btn" (click)="toggleUserMenu()">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+              <circle cx="12" cy="7" r="4"></circle>
+            </svg>
+          </button>
+
+          <div class="dropdown-menu glass-card" *ngIf="showUserMenu">
+            <button class="dropdown-item" (click)="toggleTheme()">
+              <ng-container *ngIf="!isDark">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                  <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
+                </svg>
+                Dark Mode
+              </ng-container>
+              <ng-container *ngIf="isDark">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                  <circle cx="12" cy="12" r="5"></circle>
+                  <line x1="12" y1="1" x2="12" y2="3"></line>
+                  <line x1="12" y1="21" x2="12" y2="23"></line>
+                  <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
+                  <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
+                  <line x1="1" y1="12" x2="3" y2="12"></line>
+                  <line x1="21" y1="12" x2="23" y2="12"></line>
+                  <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
+                  <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
+                </svg>
+                Light Mode
+              </ng-container>
+            </button>
+            <div class="dropdown-divider"></div>
+            <button class="dropdown-item danger" (click)="logout()">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="icon">
+                <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                <polyline points="16 17 21 12 16 7"></polyline>
+                <line x1="21" y1="12" x2="9" y2="12"></line>
+              </svg>
+              Cerrar Sesión
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </header>
@@ -15,11 +62,27 @@
       <div class="sidebar-header">
         <h3 *ngIf="!sidebarCollapsed">Proyectos</h3>
         <div class="sidebar-controls">
-          <button (click)="loadUserProjects()" class="btn btn-refresh-small" [disabled]="loading" *ngIf="!sidebarCollapsed">
-            ↻
+          <button (click)="loadUserProjects()" class="btn btn-refresh-small" [disabled]="loading"
+            *ngIf="!sidebarCollapsed">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M23 4v6h-6"></path>
+              <path d="M1 20v-6h6"></path>
+              <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+            </svg>
           </button>
           <button (click)="toggleSidebar()" class="btn btn-toggle-sidebar">
-            {{ sidebarCollapsed ? '→' : '←' }}
+            <svg *ngIf="sidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="3" y1="12" x2="21" y2="12"></line>
+              <line x1="3" y1="6" x2="21" y2="6"></line>
+              <line x1="3" y1="18" x2="21" y2="18"></line>
+            </svg>
+            <svg *ngIf="!sidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+              fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <line x1="18" y1="6" x2="6" y2="18"></line>
+              <line x1="6" y1="6" x2="18" y2="18"></line>
+            </svg>
           </button>
         </div>
       </div>
@@ -45,24 +108,62 @@
           </div>
 
           <div *ngIf="projects.length > 0" class="projects-list">
-            <div *ngFor="let project of projects" class="project-item" [class.active]="selectedProject?.id === project.id">
+            <div *ngFor="let project of projects" class="project-item"
+              [class.active]="selectedProject?.id === project.id">
               <div class="project-header" (click)="selectProject(project)">
                 <div class="project-info">
-                  <h4>{{ project.name }}</h4>
+                  <h4>
+                    <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                      stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                      class="project-icon mr-2">
+                      <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                    </svg>
+                    {{ project.name }}
+                  </h4>
                 </div>
-                <div class="project-dropdown" (click)="toggleProjectExpansion(project, $event)" 
-                     [class.expanded]="expandedProjects.has(project.id)">
-                  ▼
+                <div class="project-dropdown" (click)="toggleProjectExpansion(project, $event)">
+                  <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                    class="expand-icon" [class.expanded]="expandedProjects.has(project.id)">
+                    <polyline points="9 18 15 12 9 6"></polyline>
+                  </svg>
                 </div>
               </div>
-              
+
               <div class="project-details" [class.expanded]="expandedProjects.has(project.id)">
                 <div class="project-stats">
                   <span class="stat" *ngIf="hasGeneratedCode(project)">
-                    <span class="stat-label">Código Generado</span>
+                    <span class="stat-label">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="circuit-icon mr-1">
+                        <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                        <rect x="6" y="6" width="12" height="12" rx="2" ry="2"></rect>
+                        <line x1="9" y1="2" x2="9" y2="6"></line>
+                        <line x1="15" y1="2" x2="15" y2="6"></line>
+                        <line x1="9" y1="18" x2="9" y2="22"></line>
+                        <line x1="15" y1="18" x2="15" y2="22"></line>
+                        <line x1="2" y1="9" x2="6" y2="9"></line>
+                        <line x1="2" y1="15" x2="6" y2="15"></line>
+                        <line x1="18" y1="9" x2="22" y2="9"></line>
+                        <line x1="18" y1="15" x2="22" y2="15"></line>
+                      </svg>
+                      Código Generado
+                    </span>
                   </span>
                   <span class="stat" *ngIf="hasMutantCycles(project)">
-                    <span class="stat-label">Mutant Cycle</span>
+                    <span class="stat-label">
+                      <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                        class="mutant-icon mr-1">
+                        <rect x="2" y="2" width="20" height="20" rx="2" ry="2"></rect>
+                        <path d="M8.6 15l-1-1A2 2 0 0 1 9 10.6l5.8-5.8a2 2 0 0 1 2.8 2.8l-5.8 5.8a2 2 0 0 1-3.4 1.6z">
+                        </path>
+                        <path d="M14 13l2.5 2.5"></path>
+                        <path d="M9 18l3-3"></path>
+                      </svg>
+                      Mutant Cycle
+                    </span>
                   </span>
                   <span class="stat" *ngIf="hasTestCases(project)">
                     <span class="stat-label">Test Case</span>
@@ -85,7 +186,8 @@
         <div class="tool-card">
           <h3 class="tool-title">Quaco (Quantum Annealing Code Generator)</h3>
           <p class="tool-description">
-            Un generador de código cuántico para problemas de optimización. Los problemas pueden describirse de manera genérica (con sumatorios, productorios y variables simbólicas) e instanciarse con datos.
+            Un generador de código cuántico para problemas de optimización. Los problemas pueden describirse de manera
+            genérica (con sumatorios, productorios y variables simbólicas) e instanciarse con datos.
           </p>
           <a href="#" class="tool-link">Visitar Quaco</a>
         </div>
@@ -101,7 +203,9 @@
         <div class="tool-card">
           <h3 class="tool-title">Qumu (Quantum Mutation)</h3>
           <p class="tool-description">
-            Sirve para generar y ejecutar mutantes cuánticos. La entrada es un circuito en formato quirk. La herramienta genera los mutantes tanto en este mismo formato como en Qiskit. Dispone de diversos algoritmos de ejecución. La ejecución de los mutantes se produce en el servidor.
+            Sirve para generar y ejecutar mutantes cuánticos. La entrada es un circuito en formato quirk. La herramienta
+            genera los mutantes tanto en este mismo formato como en Qiskit. Dispone de diversos algoritmos de ejecución.
+            La ejecución de los mutantes se produce en el servidor.
           </p>
           <a href="#" class="tool-link">Visitar Qumu</a>
         </div>
