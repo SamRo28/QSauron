@@ -1,0 +1,119 @@
+<div class="project-details-container" *ngIf="project; else loadingOrError">
+    <div class="header-section">
+        <h2>{{ project.name }}</h2>
+        <p class="text-secondary">Project Overview</p>
+    </div>
+
+    <div class="panels-grid">
+        <!-- QuCo Panel -->
+        <div class="tool-panel glass-card">
+            <div class="panel-header">
+                <div class="icon-wrapper">
+                    <img src="/QuCo-icon.svg" alt="QuCo" class="tool-icon">
+                </div>
+                <h3>QuCo</h3>
+            </div>
+
+            <div class="panel-content">
+                <div *ngIf="hasQuCo(); else noQuCo">
+                    <div class="stat-row">
+                        <span class="label">Generator:</span>
+                        <span class="value">{{ getQuCoInfo()?.generatorType }}</span>
+                    </div>
+                    <div class="stat-row">
+                        <span class="label">Qubits:</span>
+                        <span class="value">{{ getQuCoInfo()?.qubits }}</span>
+                    </div>
+                </div>
+                <ng-template #noQuCo>
+                    <p class="empty-state">No quantum code generation data found.</p>
+                </ng-template>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-action" *ngIf="hasQuCo()" (click)="openTool('QuCo')">Open QuCo</button>
+                <button class="btn-action btn-add" *ngIf="!hasQuCo()" (click)="addTool('QuCo')">Add QuCo</button>
+            </div>
+        </div>
+
+        <!-- QuTe Panel -->
+        <div class="tool-panel glass-card">
+            <div class="panel-header">
+                <div class="icon-wrapper">
+                    <img src="/QuTe-icon.svg" alt="QuTe" class="tool-icon">
+                </div>
+                <h3>QuTe</h3>
+            </div>
+
+            <div class="panel-content">
+                <div *ngIf="hasQuTe(); else noQuTe">
+                    <div class="stat-row highlight">
+                        <span class="label">Test Suites:</span>
+                        <span class="value">{{ getQuTeDetails().length }}</span>
+                    </div>
+                    <div class="details-list">
+                        <div *ngFor="let suite of getQuTeDetails(); let i = index" class="detail-item">
+                            <span class="item-title">Suite #{{i + 1}}</span>
+                            <span class="item-info">{{ suite.testCases.length || 0 }} Cases ({{ getTestCaseType(suite)
+                                }})</span>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #noQuTe>
+                    <p class="empty-state">No test suites found.</p>
+                </ng-template>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-action" *ngIf="hasQuTe()" (click)="openTool('QuTe')">Open QuTe</button>
+                <button class="btn-action btn-add" *ngIf="!hasQuTe()" (click)="addTool('QuTe')">Add QuTe</button>
+            </div>
+        </div>
+
+        <!-- QuMu Panel -->
+        <div class="tool-panel glass-card">
+            <div class="panel-header">
+                <div class="icon-wrapper">
+                    <img src="/QuMu-icon.svg" alt="QuMu" class="tool-icon">
+                </div>
+                <h3>QuMu</h3>
+            </div>
+
+            <div class="panel-content">
+                <div *ngIf="hasQuMu(); else noQuMu">
+                    <div class="stat-row highlight">
+                        <span class="label">Mutant Cycles:</span>
+                        <span class="value">{{ getQuMuDetails().length }}</span>
+                    </div>
+                    <div class="details-list">
+                        <div *ngFor="let cycle of getQuMuDetails(); let i = index" class="detail-item">
+                            <span class="item-title">Cycle #{{i + 1}}</span>
+                            <span class="item-info">{{ cycle.mutants.length || 0 }} Mutants</span>
+                        </div>
+                    </div>
+                </div>
+                <ng-template #noQuMu>
+                    <p class="empty-state">No mutant cycles found.</p>
+                </ng-template>
+            </div>
+
+            <div class="panel-actions">
+                <button class="btn-action" *ngIf="hasQuMu()" (click)="openTool('QuMu')">Open QuMu</button>
+                <button class="btn-action btn-add" *ngIf="!hasQuMu()" (click)="addTool('QuMu')">Add QuMu</button>
+            </div>
+        </div>
+
+    </div>
+
+    <app-project-notes [project]="project"></app-project-notes>
+</div>
+
+<ng-template #loadingOrError>
+    <div class="loading-container" *ngIf="loading">
+        <div class="spinner"></div>
+        <p>Loading project details...</p>
+    </div>
+    <div class="error-container" *ngIf="error && !loading">
+        <p>{{ error }}</p>
+    </div>
+</ng-template>

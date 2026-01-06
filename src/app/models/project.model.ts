@@ -1,0 +1,21 @@
+import { MutantCycle } from "./mutant-cycle.model";
+import { ProjectNote } from "./project-note.model";
+import { QProgram } from "./q-program.model";
+import { TestSuite } from "./test-suite.model";
+
+export interface User {
+    id?: string;
+    email?: string;
+    pwd?: string;
+    projects?: Project[];
+}
+
+export interface Project {
+    id: string;
+    name: string;
+    mutantCycles: MutantCycle[];
+    testSuites: TestSuite[];
+    qProgram: QProgram;
+    users: User[];
+    projectNotes: ProjectNote[];
+}

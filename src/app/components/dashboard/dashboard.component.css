@@ -148,203 +148,7 @@
   min-height: calc(100vh - 74px);
 }
 
-/* Sidebar - Opción A: Glassmorphism Oscuro */
-.sidebar {
-  width: 280px;
-  background: rgba(20, 80, 60, 0.85);
-  /* Verde translúcido */
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
-  border-right: 1px solid rgba(255, 255, 255, 0.1);
-  overflow-y: auto;
-  transition: width 0.3s ease;
-  z-index: 900;
-}
 
-.sidebar.collapsed {
-  width: 70px;
-  /* Slightly wider for better icon centering */
-}
-
-.sidebar-header {
-  padding: 24px 20px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.sidebar.collapsed .sidebar-header {
-  padding: 24px 10px;
-  justify-content: center;
-}
-
-.sidebar-header h3 {
-  margin: 0;
-  font-size: 1.1rem;
-  font-weight: 600;
-  color: #ecfdf5;
-  letter-spacing: 0.02em;
-}
-
-.sidebar-controls {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.btn-refresh-small,
-.btn-toggle-sidebar {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.15);
-  color: rgba(236, 253, 245, 0.8);
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 6px;
-  transition: all 0.2s ease;
-}
-
-.btn-refresh-small:hover,
-.btn-toggle-sidebar:hover {
-  background-color: rgba(255, 255, 255, 0.25);
-  color: white;
-}
-
-.sidebar-content {
-  padding: 16px 0;
-}
-
-.sidebar-loading,
-.sidebar-error {
-  padding: 20px;
-  text-align: center;
-  color: #a7f3d0;
-}
-
-.loading-spinner-small {
-  width: 20px;
-  height: 20px;
-  border: 2px solid rgba(255, 255, 255, 0.2);
-  border-top: 2px solid #34d399;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 10px;
-}
-
-.sidebar-error .error-text {
-  color: #fca5a5;
-  font-size: 0.85rem;
-  margin-bottom: 10px;
-}
-
-.btn-retry-small {
-  background: rgba(239, 68, 68, 0.8);
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-size: 0.8rem;
-  cursor: pointer;
-}
-
-.no-projects-sidebar {
-  padding: 20px;
-  text-align: center;
-  color: rgba(236, 253, 245, 0.6);
-  font-size: 0.9rem;
-}
-
-.projects-list {
-  padding: 0 10px;
-}
-
-.project-item {
-  margin-bottom: 4px;
-}
-
-.project-header {
-  padding: 12px;
-  border-radius: 8px;
-  transition: all 0.2s ease;
-  background: transparent;
-  cursor: pointer;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #d1fae5;
-}
-
-.project-item:hover .project-header {
-  background: rgba(255, 255, 255, 0.1);
-  color: #fff;
-}
-
-.project-item.active .project-header {
-  background: rgba(16, 185, 129, 0.2);
-  color: #fff;
-  border: 1px solid rgba(16, 185, 129, 0.3);
-}
-
-.project-info h4 {
-  margin: 0;
-  font-family: 'Inter', sans-serif;
-  font-size: 0.9rem;
-  font-weight: 500;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.project-dropdown {
-  color: rgba(255, 255, 255, 0.5);
-  padding: 4px;
-}
-
-.project-dropdown:hover {
-  color: #fff;
-}
-
-.expand-icon {
-  transition: transform 0.2s ease;
-}
-
-.project-dropdown.expanded .expand-icon {
-  transform: rotate(90deg);
-}
-
-.project-details {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-  padding-left: 12px;
-}
-
-.project-details.expanded {
-  max-height: 300px;
-}
-
-.project-stats {
-  padding: 8px 0 8px 12px;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  border-left: 1px solid rgba(255, 255, 255, 0.1);
-  margin-left: 6px;
-}
-
-.stat {
-  font-size: 0.8rem;
-  color: rgba(236, 253, 245, 0.7);
-  padding: 6px 8px;
-  border-radius: 4px;
-  display: flex;
-  align-items: center;
-}
-
-.stat:hover {
-  background: rgba(255, 255, 255, 0.05);
-  color: #fff;
-}
 
 /* Main content */
 .main-content {
@@ -482,15 +286,7 @@
 }
 
 /* Animations */
-@keyframes spin {
-  0% {
-    transform: rotate(0deg);
-  }
 
-  100% {
-    transform: rotate(360deg);
-  }
-}
 
 /* Icons */
 .project-icon,
@@ -499,18 +295,7 @@
   /* Override old colors with whitelist-friendly logic or keep sidebar specific */
 }
 
-/* Sidebar specific overrides */
-.sidebar .project-icon {
-  color: #34d399;
-}
 
-.sidebar .circuit-icon {
-  color: #6ee7b7;
-}
-
-.sidebar .mutant-icon {
-  color: #a7f3d0;
-}
 
 
 /* Responsive */
@@ -525,17 +310,7 @@
     flex-direction: column;
   }
 
-  .sidebar {
-    width: 100%;
-    height: auto;
-    max-height: 300px;
-    border-right: none;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  }
 
-  .sidebar.collapsed {
-    width: 100%;
-  }
 
   .main-content {
     padding: 24px;
@@ -563,10 +338,7 @@
   color: #e2e8f0;
 }
 
-:host-context([data-theme='dark']) .sidebar {
-  background: rgba(2, 6, 23, 0.85);
-  border-right: 1px solid rgba(16, 185, 129, 0.2);
-}
+
 
 :host-context([data-theme='dark']) .content-header h2 {
   color: #e2e8f0;

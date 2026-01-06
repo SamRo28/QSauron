@@ -1,0 +1,63 @@
+<!-- Botón Flotante (FAB) -->
+<div class="fab-container" *ngIf="project">
+    <button class="fab-button" (click)="togglePanel()" [class.active]="isPanelOpen" title="Ver Notas del Proyecto">
+        <!-- Icono de clipboard/notas -->
+        <svg class="fab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            <path d="M9 12h6m-6 4h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+        </svg>
+        <div class="fab-glow"></div>
+    </button>
+</div>
+
+<!-- Panel Lateral de Notas - Overlay -->
+<div class="notes-panel-overlay" *ngIf="isPanelOpen" (click)="togglePanel()">
+</div>
+
+<!-- Panel Lateral de Notas -->
+<div class="notes-panel" [class.open]="isPanelOpen">
+    <!-- Header del Panel -->
+    <div class="panel-header">
+        <div class="panel-header-content">
+            <svg class="panel-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path
+                    d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"
+                    stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <path d="M9 12h6m-6 4h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <h2 class="panel-title">Notas del Proyecto</h2>
+        </div>
+        <button class="close-button" (click)="togglePanel()" title="Cerrar">
+            <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Lista de Notas (Read Only) -->
+    <div class="notes-list">
+        <div *ngFor="let note of sortedNotes" class="note-item">
+            <div class="note-header">
+                <h3 class="note-title">{{ note.title }}</h3>
+                <span class="note-type">({{ note.type }})</span>
+            </div>
+            <p class="note-preview" style="-webkit-line-clamp: unset;">{{ note.text || 'Sin contenido' }}</p>
+            <div class="note-footer">
+                <span class="note-date">{{ formatDate(note.timestamp) }}</span>
+            </div>
+        </div>
+
+        <!-- Estado vacío -->
+        <div *ngIf="sortedNotes.length === 0" class="empty-state">
+            <svg class="empty-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <rect x="5" y="4" width="14" height="17" rx="2" stroke="currentColor" stroke-width="2" />
+                <line x1="9" y1="9" x2="15" y2="9" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                <line x1="9" y1="17" x2="12" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+            <p class="empty-text">No hay notas aún</p>
+        </div>
+    </div>
+</div>

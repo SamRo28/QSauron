@@ -1,0 +1,97 @@
+<aside class="sidebar" [class.collapsed]="sidebarCollapsed">
+  <div class="sidebar-header">
+    <h3 *ngIf="!sidebarCollapsed">Projects</h3>
+    <div class="sidebar-controls">
+      <button (click)="loadUserProjects()" class="btn btn-refresh-small" [disabled]="loading" *ngIf="!sidebarCollapsed">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M23 4v6h-6"></path>
+          <path d="M1 20v-6h6"></path>
+          <path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path>
+        </svg>
+      </button>
+      <button (click)="toggleSidebar()" class="btn btn-toggle-sidebar">
+        <svg *ngIf="sidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="3" y1="12" x2="21" y2="12"></line>
+          <line x1="3" y1="6" x2="21" y2="6"></line>
+          <line x1="3" y1="18" x2="21" y2="18"></line>
+        </svg>
+        <svg *ngIf="!sidebarCollapsed" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24"
+          fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="18" y1="6" x2="6" y2="18"></line>
+          <line x1="6" y1="6" x2="18" y2="18"></line>
+        </svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- Projects in sidebar -->
+  <div class="sidebar-content" *ngIf="!sidebarCollapsed">
+    <!-- Loading state -->
+    <div *ngIf="loading" class="sidebar-loading">
+      <div class="loading-spinner-small"></div>
+      <span>Cargando...</span>
+    </div>
+
+    <!-- Error state -->
+    <div *ngIf="error && !loading" class="sidebar-error">
+      <p class="error-text">Error al cargar</p>
+      <button (click)="loadUserProjects()" class="btn btn-retry-small">Reintentar</button>
+    </div>
+
+    <!-- Projects list in sidebar -->
+    <div *ngIf="!loading && !error" class="projects-sidebar">
+      <div *ngIf="projects.length === 0" class="no-projects-sidebar">
+        <p>Sin proyectos</p>
+      </div>
+
+      <div *ngIf="projects.length > 0" class="projects-list">
+        <div *ngFor="let project of projects" class="project-item" [class.active]="selectedProject?.id === project.id">
+          <div class="project-header" (click)="selectProject(project)">
+            <div class="project-info">
+              <h4>
+                <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+                  stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                  class="project-icon mr-2">
+                  <path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path>
+                </svg>
+                {{ project.name }}
+              </h4>
+            </div>
+            <div class="project-dropdown" (click)="toggleProjectExpansion(project, $event)">
+              <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none"
+                stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
+                class="expand-icon" [class.expanded]="expandedProjects.has(project.id)">
+                <polyline points="9 18 15 12 9 6"></polyline>
+              </svg>
+            </div>
+          </div>
+
+          <div class="project-details" [class.expanded]="expandedProjects.has(project.id)">
+            <div class="project-stats">
+              <span class="stat" *ngIf="hasGeneratedCode(project)">
+                <span class="stat-label">
+                  <img src="/QuCo-icon.svg" alt="QuCo" class="tool-icon-small mr-1" style="width: 14px; height: 14px;">
+                  Quantum Code
+                </span>
+              </span>
+              <span class="stat" *ngIf="hasMutantCycles(project)">
+                <span class="stat-label">
+                  <img src="/QuMu-icon.svg" alt="QuMu" class="tool-icon-small mr-1" style="width: 14px; height: 14px;">
+                  Mutant Cycles
+                </span>
+              </span>
+              <span class="stat" *ngIf="hasTestCases(project)">
+                <span class="stat-label">
+                  <img src="/QuTe-icon.svg" alt="QuTe" class="tool-icon-small mr-1" style="width: 14px; height: 14px;">
+                  Test Suites
+                </span>
+              </span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</aside>

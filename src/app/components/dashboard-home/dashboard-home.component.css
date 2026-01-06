@@ -1,0 +1,140 @@
+/* Dashboard Home - Glassmorphism Quantum Style */
+
+.content-header {
+    margin-bottom: 2rem;
+}
+
+.header-section h2 {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--text-primary);
+    margin-bottom: 0.5rem;
+}
+
+.text-secondary {
+    color: var(--text-secondary);
+}
+
+.panels-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+
+.glass-card {
+    background: var(--glass-bg-card);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    border: 1px solid var(--border-glass);
+    border-radius: var(--radius-lg);
+    padding: 1.5rem;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    transition: all 0.3s ease;
+    box-shadow: var(--card-shadow);
+}
+
+.glass-card:hover {
+    box-shadow: var(--card-shadow-hover);
+    border-color: var(--accent-primary);
+    transform: translateY(-2px);
+}
+
+.panel-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-glass-light);
+}
+
+.icon-wrapper {
+    width: 48px;
+    height: 48px;
+    background: rgba(16, 185, 129, 0.1);
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--border-glass-light);
+}
+
+.tool-icon {
+    width: 24px;
+    height: 24px;
+}
+
+/* Dark Mode Logo Whitening */
+:host-context([data-theme='dark']) .tool-icon {
+    filter: brightness(0) invert(1);
+}
+
+.panel-title {
+    display: flex;
+    flex-direction: column;
+}
+
+.panel-title h3 {
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: var(--text-primary);
+    margin: 0;
+    margin-bottom: 0.25rem;
+}
+
+.tool-subtitle {
+    font-size: 0.85rem;
+    color: var(--accent-primary);
+    font-weight: 500;
+}
+
+.panel-content {
+    flex-grow: 1;
+    margin-bottom: 1.5rem;
+}
+
+.tool-description {
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.6;
+}
+
+.panel-actions {
+    margin-top: auto;
+}
+
+.btn-action {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: var(--radius-md);
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    border: none;
+    /* Botón verde solicitado */
+    background: var(--accent-primary);
+    color: #fff;
+    /* White text on green button for better contrast */
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.btn-action:hover {
+    opacity: 0.9;
+    transform: translateY(-1px);
+    box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}

@@ -4,24 +4,10 @@ import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
 import { catchError, tap } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-export interface User {
-  email: string;
-  pwd: string;
-}
+import { Project, User } from '../models/project.model';
 
 export interface LoginResponse {
   token: string;
-}
-
-export interface Project {
-  id: number;
-  name: string;
-  mutantCycles: any[];
-  testSuite: any[];
-  qProgram: any;
-  users: {
-    id: string;
-  }[];
 }
 
 export interface ProjectRequest {
@@ -123,6 +109,15 @@ export class AuthService {
   /**
    * Get user projects
    */
+  getProject(projectId: string): Observable<Project> {
+    const email = this.currentUserSubject.value || '';
+    console.log("Fetching project", projectId, "for user", email);
+    return this.http.post<Project>(`${this.PROJECTS_URL}/getProject`, {
+      email: email,
+      projectId: projectId
+    }, { withCredentials: true });
+  }
+
   getUserProjects(): Observable<Project[]> {
     const email = this.getCurrentUser();
 
