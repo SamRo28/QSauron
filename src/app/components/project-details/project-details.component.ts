@@ -1,5 +1,6 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { environment } from '../../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { Project } from '../../models/project.model';
@@ -89,12 +90,15 @@ export class ProjectDetailsComponent implements OnInit {
 
   openTool(toolName: string) {
     console.log(`Open tool: ${toolName}`);
-    // Placeholder for navigation
+    if (toolName === 'QuMu' && this.project?.id) {
+      window.location.href = `${environment.quMuUrl}/project/${this.project.id}`;
+    }
   }
 
   addTool(toolName: string) {
     console.log(`Add tool: ${toolName}`);
-    // Placeholder for action
+    if (toolName === 'QuMu' && this.project?.id) {
+      window.location.href = `${environment.quMuUrl}/project/${this.project.id}`;
+    }
   }
-
 }

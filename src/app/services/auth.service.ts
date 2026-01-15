@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
-import { catchError, tap } from 'rxjs/operators';
+import { catchError, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
 import { Project, User } from '../models/project.model';
@@ -24,7 +24,7 @@ export class AuthService {
   // Token is now handled via HttpOnly cookie
   private readonly USER_KEY = 'current_user';
 
-  private isAuthenticatedSubject = new BehaviorSubject<boolean>(this.hasUser());
+  private isAuthenticatedSubject = new BehaviorSubject<boolean>(false);
   public isAuthenticated$ = this.isAuthenticatedSubject.asObservable();
 
   private currentUserSubject = new BehaviorSubject<string | null>(this.getCurrentUserFromStorage());
@@ -33,7 +33,11 @@ export class AuthService {
   constructor(
     private http: HttpClient,
     private router: Router
-  ) { }
+  ) {
+    this.hasUser().subscribe(isAuthenticated => {
+      this.isAuthenticatedSubject.next(isAuthenticated);
+    });
+  }
 
   /**
    * Register a new user
@@ -74,8 +78,11 @@ export class AuthService {
   /**
    * Check if user is authenticated
    */
+  /**
+   * Check if user is authenticated
+   */
   isAuthenticated(): boolean {
-    return this.hasUser();
+    return this.isAuthenticatedSubject.value;
   }
 
   loadQRCode(): Observable<any> {
@@ -93,6 +100,19 @@ export class AuthService {
 
   verify2FACode(email: string, code: string): Observable<string> {
     return this.http.post<string>(`${this.API_URL}/verify2FACode`, { email, code }, { responseType: 'text' as 'json' });
+  }
+
+  getUser(): Observable<string> {
+    return this.http.post<string>(`${this.API_URL}/getUser`, {}, {
+      withCredentials: true,
+      responseType: 'text' as 'json'
+    }).pipe(
+      tap(user => {
+        if (typeof window !== 'undefined') {
+          sessionStorage.setItem('email', user);
+        }
+      })
+    );
   }
 
 
@@ -156,12 +176,15 @@ export class AuthService {
     }
   }
 
-  private hasUser(): boolean {
-    if (typeof window !== 'undefined') {
-      const user = localStorage.getItem(this.USER_KEY);
-      return user !== null && user.length > 0;
+
+  private hasUser(): Observable<boolean> {
+    this.getUser();
+    let user = sessionStorage.getItem('email');
+    if (user) {
+      return of(true);
     }
-    return false;
+    catchError(() => of(false))
+    return of(false);
   }
 
   private getCurrentUserFromStorage(): string | null {

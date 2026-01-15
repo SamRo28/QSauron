@@ -15,7 +15,8 @@
         </nav>
 
         <div class="cta-section" style="display: flex; gap: 1rem;">
-            <a routerLink="/login" class="glass-btn glass-btn-secondary glass-btn-sm">Log In</a>
+            <a (click)="checkSession()" class="glass-btn glass-btn-secondary glass-btn-sm" style="cursor: pointer;">Log
+                In</a>
             <a routerLink="/register" class="glass-btn glass-btn-sm">Sign Up</a>
         </div>
     </header>
@@ -103,7 +104,8 @@
                 </div>
             </div>
 
-            <a routerLink="/login" class="glass-btn glass-btn-lg animate-fade-in-up">Comenzar el Flujo de Trabajo</a>
+            <a (click)="checkSession()" class="glass-btn glass-btn-lg animate-fade-in-up"
+                style="cursor: pointer;">Comenzar el Flujo de Trabajo</a>
         </div>
     </section>
 </div>
