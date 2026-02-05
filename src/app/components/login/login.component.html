@@ -4,8 +4,8 @@
       <div class="logo-container">
         <img src="/logo.svg" alt="QSauron Logo" width="64" height="64">
       </div>
-      <h2>Iniciar Sesión</h2>
-      <p>Accede a tu cuenta</p>
+      <h2>Login</h2>
+      <p>Access your account</p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
@@ -13,19 +13,19 @@
       <div class="form-group">
         <label for="email">Email:</label>
         <input type="email" id="email" formControlName="email" class="form-control"
-          [class.is-invalid]="submitted && f['email'].errors" placeholder="Ingresa tu email">
+          [class.is-invalid]="submitted && f['email'].errors" placeholder="Enter your email">
         <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
-          <div *ngIf="f['email'].errors['required']">El email es requerido</div>
-          <div *ngIf="f['email'].errors['email']">El email debe tener un formato válido</div>
+          <div *ngIf="f['email'].errors['required']">Email is required</div>
+          <div *ngIf="f['email'].errors['email']">Email must have a valid format</div>
         </div>
       </div>
 
       <!-- Password field -->
       <div class="form-group">
-        <label for="password">Contraseña:</label>
+        <label for="password">Password:</label>
         <div class="password-input-wrapper">
           <input [type]="showPassword ? 'text' : 'password'" id="password" formControlName="pwd" class="form-control"
-            [class.is-invalid]="submitted && f['pwd'].errors" placeholder="Ingresa tu contraseña">
+            [class.is-invalid]="submitted && f['pwd'].errors" placeholder="Enter your password">
           <button type="button" class="password-toggle-btn" (click)="togglePassword()">
             <!-- Eye Icon -->
             <svg *ngIf="!showPassword" xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24"
@@ -44,8 +44,8 @@
           </button>
         </div>
         <div *ngIf="submitted && f['pwd'].errors" class="invalid-feedback">
-          <div *ngIf="f['pwd'].errors['required']">La contraseña es requerida</div>
-          <div *ngIf="f['pwd'].errors['minlength']">La contraseña debe tener al menos 6 caracteres</div>
+          <div *ngIf="f['pwd'].errors['required']">Password is required</div>
+          <div *ngIf="f['pwd'].errors['minlength']">Password must be at least 6 characters long</div>
         </div>
       </div>
 
@@ -56,15 +56,15 @@
       <div class="form-group">
         <button type="submit" class="btn btn-primary btn-block" [disabled]="loading">
           <span *ngIf="loading" class="spinner"></span>
-          {{ loading ? 'Iniciando sesión...' : 'Iniciar Sesión' }}
+          {{ loading ? 'Logging in...' : 'Login' }}
         </button>
       </div>
 
       <!-- Register link -->
       <div class="form-group text-center">
-        <p>¿No tienes cuenta?
+        <p>Don't have an account?
           <a href="#" (click)="navigateToRegister(); $event.preventDefault()" class="register-link">
-            Regístrate aquí
+            Register here
           </a>
         </p>
       </div>

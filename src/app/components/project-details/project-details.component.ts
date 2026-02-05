@@ -27,6 +27,7 @@ export class ProjectDetailsComponent implements OnInit {
       map(params => params.get('id')),
       switchMap(id => {
         this.loading = true;
+        this.project = null; // Reset to trigger DOM re-render and animations
         if (id) {
           return this.authService.getProject(id);
         } else {

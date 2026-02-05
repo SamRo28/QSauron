@@ -12,6 +12,14 @@
     font-weight: 700;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.title-icon {
+    fill: var(--text-primary);
+    /* Ensure icon matches text color */
 }
 
 .text-secondary {
@@ -201,16 +209,67 @@
     }
 }
 
-/* Scrollbar styles for details list */
-.details-list::-webkit-scrollbar {
-    width: 4px;
+.tool-panel {
+    opacity: 0;
+    /* Initialize hidden for animation */
+    animation: fadeIn 0.5s ease-out forwards;
 }
 
-.details-list::-webkit-scrollbar-track {
-    background: transparent;
+/* Staggered animation delays */
+.tool-panel:nth-child(1) {
+    animation-delay: 0.1s;
 }
 
-.details-list::-webkit-scrollbar-thumb {
-    background: var(--border-glass);
-    border-radius: 2px;
+.tool-panel:nth-child(2) {
+    animation-delay: 0.2s;
+}
+
+.tool-panel:nth-child(3) {
+    animation-delay: 0.3s;
+}
+
+
+/* Clean up unused scrollbar styles if desired, but adding loader CSS below */
+
+.loading-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    min-height: 200px;
+}
+
+/* HTML: <div class="loader"></div> */
+.loader {
+    width: 50px;
+    aspect-ratio: 1;
+    display: grid;
+}
+
+.loader::before,
+.loader::after {
+    content: "";
+    grid-area: 1/1;
+    --c: no-repeat radial-gradient(farthest-side, #25b09b 92%, #0000);
+    background:
+        var(--c) 50% 0,
+        var(--c) 50% 100%,
+        var(--c) 100% 50%,
+        var(--c) 0 50%;
+    background-size: 12px 12px;
+    animation: l12 1s infinite;
+}
+
+.loader::before {
+    margin: 4px;
+    filter: hue-rotate(45deg);
+    background-size: 8px 8px;
+    animation-timing-function: linear
+}
+
+@keyframes l12 {
+    100% {
+        transform: rotate(.5turn)
+    }
 }

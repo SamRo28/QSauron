@@ -1,6 +1,6 @@
 <!-- Botón Flotante (FAB) -->
-<div class="fab-container" *ngIf="project">
-    <button class="fab-button" (click)="togglePanel()" [class.active]="isPanelOpen" title="Ver Notas del Proyecto">
+<div class="fab-container" *ngIf="project && !isPanelOpen">
+    <button class="fab-button" (click)="openPanel()" title="Ver Notas del Proyecto">
         <!-- Icono de clipboard/notas -->
         <svg class="fab-icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -13,7 +13,7 @@
 </div>
 
 <!-- Panel Lateral de Notas - Overlay -->
-<div class="notes-panel-overlay" *ngIf="isPanelOpen" (click)="togglePanel()">
+<div class="notes-panel-overlay" *ngIf="isPanelOpen">
 </div>
 
 <!-- Panel Lateral de Notas -->
@@ -27,9 +27,9 @@
                     stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 <path d="M9 12h6m-6 4h6" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
-            <h2 class="panel-title">Notas del Proyecto</h2>
+            <h2 class="panel-title">Project Notes</h2>
         </div>
-        <button class="close-button" (click)="togglePanel()" title="Cerrar">
+        <button class="close-button" (click)="closePanel()" title="Cerrar">
             <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                 <path d="M6 18L18 6M6 6l12 12" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
@@ -57,7 +57,7 @@
                 <line x1="9" y1="13" x2="15" y2="13" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
                 <line x1="9" y1="17" x2="12" y2="17" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
             </svg>
-            <p class="empty-text">No hay notas aún</p>
+            <p class="empty-text">No notes yet</p>
         </div>
     </div>
 </div>

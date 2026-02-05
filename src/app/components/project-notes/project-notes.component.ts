@@ -28,11 +28,17 @@ export class ProjectNotesComponent {
     }
 
     /**
-     * Abre/cierra el panel de notas
+     * Abre el panel de notas
      */
-    togglePanel(): void {
-        if (!this.project) return;
-        this.isPanelOpen = !this.isPanelOpen;
+    openPanel(): void {
+        this.isPanelOpen = true;
+    }
+
+    /**
+     * Cierra el panel de notas
+     */
+    closePanel(): void {
+        this.isPanelOpen = false;
     }
 
     /**

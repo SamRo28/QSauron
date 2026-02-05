@@ -31,19 +31,19 @@
     <!-- Loading state -->
     <div *ngIf="loading" class="sidebar-loading">
       <div class="loading-spinner-small"></div>
-      <span>Cargando...</span>
+      <span>Loading...</span>
     </div>
 
     <!-- Error state -->
     <div *ngIf="error && !loading" class="sidebar-error">
-      <p class="error-text">Error al cargar</p>
-      <button (click)="loadUserProjects()" class="btn btn-retry-small">Reintentar</button>
+      <p class="error-text">Error loading</p>
+      <button (click)="loadUserProjects()" class="btn btn-retry-small">Retry</button>
     </div>
 
     <!-- Projects list in sidebar -->
     <div *ngIf="!loading && !error" class="projects-sidebar">
       <div *ngIf="projects.length === 0" class="no-projects-sidebar">
-        <p>Sin proyectos</p>
+        <p>No projects</p>
       </div>
 
       <div *ngIf="projects.length > 0" class="projects-list">
