@@ -12,4 +12,12 @@ export class DashboardHomeComponent {
   createQuMuProject() {
     window.location.href = `${environment.quMuUrl}`;
   }
+
+  createQuCoProject() {
+    window.location.href = `${environment.quCoUrl}`;
+  }
+
+  createQuTeProject() {
+    window.location.href = `${environment.quTeUrl}`;
+  }
 }

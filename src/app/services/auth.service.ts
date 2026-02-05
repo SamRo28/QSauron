@@ -1,4 +1,5 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Inject, PLATFORM_ID } from '@angular/core';
+import { isPlatformBrowser } from '@angular/common';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
@@ -15,12 +16,14 @@ export interface ProjectRequest {
   token: string;
 }
 
+import { environment } from '../../environments/environment';
+
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-  private readonly API_URL = 'http://localhost:8080/users';
-  private readonly PROJECTS_URL = 'http://localhost:8080/projects';
+  private readonly API_URL = `${environment.apiUrl}/users`;
+  private readonly PROJECTS_URL = `${environment.apiUrl}/projects`;
   // Token is now handled via HttpOnly cookie
   private readonly USER_KEY = 'current_user';
 
@@ -32,11 +35,14 @@ export class AuthService {
 
   constructor(
     private http: HttpClient,
-    private router: Router
+    private router: Router,
+    @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.hasUser().subscribe(isAuthenticated => {
-      this.isAuthenticatedSubject.next(isAuthenticated);
-    });
+    if (isPlatformBrowser(this.platformId)) {
+      this.hasUser().subscribe(isAuthenticated => {
+        this.isAuthenticatedSubject.next(isAuthenticated);
+      });
+    }
   }
 
   /**
@@ -178,12 +184,16 @@ export class AuthService {
 
 
   private hasUser(): Observable<boolean> {
-    this.getUser();
-    let user = sessionStorage.getItem('email');
-    if (user) {
-      return of(true);
+    if (isPlatformBrowser(this.platformId)) {
+      // Ideally we should verify with backend if token/session is valid,
+      // but for now checking existence of expected data in storage.
+      // The previous code called this.getUser() but didnt subscribe, so it did nothing.
+      // We'll just check storage for now to prevent the crash.
+      const user = sessionStorage.getItem('email');
+      if (user) {
+        return of(true);
+      }
     }
-    catchError(() => of(false))
     return of(false);
   }
 
@@ -217,7 +227,7 @@ export class AuthService {
           errorMessage = 'Internal server error. Please try again later.';
           break;
         default:
-          errorMessage = `Error Code: ${error.status}\nMessage: ${error.message}`;
+          errorMessage = `An error occurred`;
       }
     }
 

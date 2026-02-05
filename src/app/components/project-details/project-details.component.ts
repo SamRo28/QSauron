@@ -89,16 +89,38 @@ export class ProjectDetailsComponent implements OnInit {
   }
 
   openTool(toolName: string) {
-    console.log(`Open tool: ${toolName}`);
-    if (toolName === 'QuMu' && this.project?.id) {
+    if (!this.project?.id) return;
+
+    if (toolName === 'QuMu') {
       window.location.href = `${environment.quMuUrl}/project/${this.project.id}`;
+    } else if (toolName === 'QuCo') {
+      let localSName = 'selectedProjectId_algorithm'
+      if (this.project.qProgram.generator.type === 'MATRIX') {
+        localSName = 'selectedProjectId_matrices'
+      }
+
+      localStorage.setItem(`${localSName}`, this.project.id);
+
+      window.location.href = `${environment.quCoUrl}/${this.project.qProgram.generator.type}`;
+
+    } else if (toolName === 'QuTe') {
+      window.location.href = `${environment.quTeUrl}/project/${this.project.id}`;
     }
   }
 
   addTool(toolName: string) {
-    console.log(`Add tool: ${toolName}`);
-    if (toolName === 'QuMu' && this.project?.id) {
+    if (!this.project?.id) return;
+
+    if (toolName === 'QuMu') {
       window.location.href = `${environment.quMuUrl}/project/${this.project.id}`;
+
+
+    } else if (toolName === 'QuCo') {
+
+      window.location.href = `${environment.quCoUrl}/${this.project.qProgram.generator.type}`;
+
+    } else if (toolName === 'QuTe') {
+      window.location.href = `${environment.quTeUrl}/project/${this.project.id}`;
     }
   }
 }
