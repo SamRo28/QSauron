@@ -1,7 +1,8 @@
 export const environment = {
     production: true,
-    quMuUrl: 'http://localhost:4200',
-    quCoUrl: 'http://localhost:4200',
-    quTeUrl: 'http://localhost:4200',
-    apiUrl: 'http://localhost:8080'
+    quMuUrl: '',
+    quCoUrl: '',
+    quTeUrl: '',
+
+    apiUrl: 'http://172.20.48.23/qsauron'
 };
