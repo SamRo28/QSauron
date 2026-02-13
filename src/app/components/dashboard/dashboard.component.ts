@@ -32,7 +32,7 @@ export class DashboardComponent implements OnInit {
   }
 
   get logoUrl() {
-    return '/assets/logo.svg';
+    return 'assets/logo.svg';
   }
 
   constructor(

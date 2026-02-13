@@ -118,7 +118,7 @@ export class ProjectDetailsComponent implements OnInit {
 
     } else if (toolName === 'QuCo') {
 
-      window.location.href = `${environment.quCoUrl}/${this.project.qProgram.generator.type}`;
+      window.location.href = `${environment.quCoUrl}`;
 
     } else if (toolName === 'QuTe') {
       window.location.href = `${environment.quTeUrl}/project/${this.project.id}`;

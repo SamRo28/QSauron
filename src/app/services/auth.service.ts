@@ -49,10 +49,7 @@ export class AuthService {
    * Register a new user
    */
   register(user: User): Observable<void> {
-    return this.http.post<void>(`${this.API_URL}/create`, user)
-      .pipe(
-        catchError(this.handleError)
-      );
+    return this.http.post<void>(`${this.API_URL}/create`, user);
   }
 
   /**
@@ -69,8 +66,17 @@ export class AuthService {
    * Logout user
    */
   logout(): void {
-    this.clearSession();
-    this.router.navigate(['/login']);
+    this.http.post(`${this.API_URL}/logout`, {}, { withCredentials: true }).subscribe({
+      next: () => {
+        this.clearSession();
+        this.router.navigate(['/login']);
+      },
+      error: () => {
+        // Even if the backend fails, clear local session and redirect
+        this.clearSession();
+        this.router.navigate(['/login']);
+      }
+    });
   }
 
   /**
@@ -114,8 +120,8 @@ export class AuthService {
       responseType: 'text' as 'json'
     }).pipe(
       tap(user => {
-        if (typeof window !== 'undefined') {
-          sessionStorage.setItem('email', user);
+        if (user) {
+          this.setSession(user);
         }
       })
     );

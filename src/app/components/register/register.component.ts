@@ -114,8 +114,12 @@ export class RegisterComponent implements OnInit {
             this.router.navigate(['/2fa-qr']);
           }, 2000);
         },
-        error: (error: Error) => {
-          this.error = error.message;
+        error: (error: any) => {
+          if (error.status === 409) {
+            this.error = 'User already exists';
+          } else {
+            this.error = 'Registration failed. Please try again.';
+          }
           this.loading = false;
         }
       });
