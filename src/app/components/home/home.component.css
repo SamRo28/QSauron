@@ -164,6 +164,8 @@
     background: var(--glass-bg-card);
     border: 1px solid var(--border-glass);
     transition: transform 0.3s ease, box-shadow 0.3s ease;
+    cursor: pointer;
+    text-decoration: none;
 }
 
 .hero-card:hover {

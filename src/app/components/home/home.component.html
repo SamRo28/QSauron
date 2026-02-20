@@ -12,6 +12,7 @@
             <a [href]="env.quCoUrl" class="nav-link">QuCo</a>
             <a [href]="env.quTeUrl" class="nav-link">QuTe</a>
             <a [href]="env.quMuUrl" class="nav-link">QuMu</a>
+            <a [href]="env.quaCoUrl" class="nav-link">QuaCo</a>
         </nav>
 
         <div class="cta-section" style="display: flex; gap: 1rem;">
@@ -52,7 +53,7 @@
                 <!-- Card Container Overlay -->
                 <div class="cards-overlay">
                     <!-- Card 1: QuCo -->
-                    <div class="hero-card glass-card" style="animation-delay: 0s;">
+                    <a [href]="env.quCoUrl" class="hero-card glass-card" style="animation-delay: 0s;">
                         <div class="card-icon-sm">
                             <svg viewBox="0 0 400 400" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
                                 <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="var(--accent-primary)"
@@ -78,10 +79,10 @@
                         </div>
                         <h4>QuCo</h4>
                         <span class="step-badge">GENERATE</span>
-                    </div>
+                    </a>
 
                     <!-- Card 2: QuTe -->
-                    <div class="hero-card glass-card" style="animation-delay: 1.5s;">
+                    <a [href]="env.quTeUrl" class="hero-card glass-card" style="animation-delay: 1.5s;">
                         <div class="card-icon-sm">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -97,10 +98,10 @@
                         </div>
                         <h4>QuTe</h4>
                         <span class="step-badge">TEST</span>
-                    </div>
+                    </a>
 
                     <!-- Card 3: QuMu -->
-                    <div class="hero-card glass-card" style="animation-delay: 3s;">
+                    <a [href]="env.quMuUrl" class="hero-card glass-card" style="animation-delay: 3s;">
                         <div class="card-icon-sm">
                             <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
                                 xmlns="http://www.w3.org/2000/svg">
@@ -117,12 +118,23 @@
                         </div>
                         <h4>QuMu</h4>
                         <span class="step-badge">MUTATE</span>
-                    </div>
+                    </a>
                 </div>
             </div>
 
             <a (click)="checkSession()" class="glass-btn glass-btn-lg animate-fade-in-up" style="cursor: pointer;">Start
                 Workflow</a>
+
+            <!-- Extra Tools Section -->
+            <div class="extra-tools" style="margin-top: 3rem; width: 100%; display: flex; justify-content: center;">
+                <a [href]="env.quaCoUrl" class="hero-card glass-card" style="width: 280px; text-decoration: none;">
+                    <div class="card-icon-sm">
+                        <img src="assets/QuaCo-icon.svg" alt="QuaCo Logo" width="32" height="32">
+                    </div>
+                    <h4>QuaCo</h4>
+                    <span class="step-badge" style="font-size: 0.6rem; text-align: center;">Quantum Annealing</span>
+                </a>
+            </div>
         </div>
     </section>
 </div>
