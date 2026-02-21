@@ -19,3 +19,34 @@ export interface Project {
     users: User[];
     projectNotes: ProjectNote[];
 }
+
+export interface ProjectSummary {
+    id: string;
+    name: string;
+    hasGeneratedCode: boolean;
+    hasMutantCycles: boolean;
+    hasTestCases: boolean;
+}
+
+export interface QuCoDetailsDto {
+    generatorType: string;
+    qubits: number;
+}
+
+export interface QuTeDetailsDto {
+    testCasesCount: number;
+    suiteType: string;
+}
+
+export interface QuMuDetailsDto {
+    mutantsCount: number;
+}
+
+export interface ProjectDetailsDto {
+    id: string;
+    name: string;
+    quCoDetails: QuCoDetailsDto | null;
+    quTeDetails: QuTeDetailsDto[];
+    quMuDetails: QuMuDetailsDto[];
+    projectNotes: ProjectNote[];
+}

@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { Project, User } from '../models/project.model';
+import { Project, User, ProjectSummary, ProjectDetailsDto } from '../models/project.model';
 
 export interface LoginResponse {
   token: string;
@@ -139,34 +139,29 @@ export class AuthService {
   }
 
   /**
-   * Get user projects
+   * Get user projects lightweight DTO for details page
    */
-  getProject(projectId: string): Observable<Project> {
+  getProjectDetails(projectId: string): Observable<ProjectDetailsDto> {
     const email = this.currentUserSubject.value || '';
-    console.log("Fetching project", projectId, "for user", email);
-    return this.http.post<Project>(`${this.PROJECTS_URL}/getProject`, {
+    console.log("Fetching project details", projectId, "for user", email);
+    return this.http.post<ProjectDetailsDto>(`${this.PROJECTS_URL}/getProjectDetails`, {
       email: email,
       projectId: projectId
     }, { withCredentials: true });
   }
 
-  getUserProjects(): Observable<Project[]> {
+  getUserProjectSummaries(): Observable<ProjectSummary[]> {
     const email = this.getCurrentUser();
 
     if (!email) {
       return throwError(() => new Error('User not authenticated'));
     }
 
-    // Token param removed from request object, backend should read cookie
-    // But keeping existing structure if backend expects body params.
-    // Ideally backend should trigger off cookie. 
-    // Assuming backend endpoint /getAllByUser expects { email: ... } now?
-    // The previous code sent { email, token }. Providing empty token or just email.
     const request: any = {
       email: email
     };
 
-    return this.http.post<Project[]>(`${this.PROJECTS_URL}/getAllByUser`, request)
+    return this.http.post<ProjectSummary[]>(`${this.PROJECTS_URL}/getAllByUserSummary`, request)
       .pipe(
         catchError(this.handleError)
       );

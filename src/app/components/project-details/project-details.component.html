@@ -61,7 +61,7 @@
                     <div class="details-list">
                         <div *ngFor="let suite of getQuTeDetails(); let i = index" class="detail-item">
                             <span class="item-title">Suite #{{i + 1}}</span>
-                            <span class="item-info">{{ suite.testCases.length || 0 }} Cases ({{ getTestCaseType(suite)
+                            <span class="item-info">{{ suite.testCasesCount || 0 }} Cases ({{ getTestCaseType(suite)
                                 }})</span>
                         </div>
                     </div>
@@ -95,7 +95,7 @@
                     <div class="details-list">
                         <div *ngFor="let cycle of getQuMuDetails(); let i = index" class="detail-item">
                             <span class="item-title">Cycle #{{i + 1}}</span>
-                            <span class="item-info">{{ cycle.mutants.length || 0 }} Mutants</span>
+                            <span class="item-info">{{ cycle.mutantsCount || 0 }} Mutants</span>
                         </div>
                     </div>
                 </div>

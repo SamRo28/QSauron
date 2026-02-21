@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Project } from '../../models/project.model';
+import { ProjectDetailsDto } from '../../models/project.model';
 import { ProjectNote } from '../../models/project-note.model';
 
 @Component({
@@ -12,7 +12,7 @@ import { ProjectNote } from '../../models/project-note.model';
 })
 export class ProjectNotesComponent {
 
-    @Input() project: Project | null = null;
+    @Input() project: ProjectDetailsDto | null = null;
     isPanelOpen: boolean = false;
 
     /**

@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { environment } from '../../../environments/environment';
 import { ActivatedRoute } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
-import { Project } from '../../models/project.model';
+import { ProjectDetailsDto } from '../../models/project.model';
 import { map, switchMap } from 'rxjs/operators';
 import { ProjectNotesComponent } from '../project-notes/project-notes.component';
 
@@ -15,7 +15,7 @@ import { ProjectNotesComponent } from '../project-notes/project-notes.component'
   styleUrl: './project-details.component.css'
 })
 export class ProjectDetailsComponent implements OnInit {
-  project: Project | null = null;
+  project: ProjectDetailsDto | null = null;
   loading: boolean = true;
   error: string | null = null;
 
@@ -29,7 +29,7 @@ export class ProjectDetailsComponent implements OnInit {
         this.loading = true;
         this.project = null; // Reset to trigger DOM re-render and animations
         if (id) {
-          return this.authService.getProject(id);
+          return this.authService.getProjectDetails(id);
         } else {
           throw new Error("Project ID not found in route");
         }
@@ -52,41 +52,37 @@ export class ProjectDetailsComponent implements OnInit {
 
   // QuCo Logic
   hasQuCo(): boolean {
-    return !!this.project?.qProgram?.generator;
+    return !!this.project?.quCoDetails && !!this.project.quCoDetails.generatorType;
   }
 
   getQuCoInfo() {
-    if (!this.project?.qProgram) return null;
+    if (!this.project?.quCoDetails) return null;
     return {
-      generatorType: this.project.qProgram.generator?.type || 'Unknown',
-      qubits: this.project.qProgram.qubits
+      generatorType: this.project.quCoDetails.generatorType || 'Unknown',
+      qubits: this.project.quCoDetails.qubits
     };
   }
 
   // QuTe Logic
   hasQuTe(): boolean {
-    return !!(this.project?.testSuites && this.project.testSuites.length > 0);
+    return !!(this.project?.quTeDetails && this.project.quTeDetails.length > 0);
   }
 
   getQuTeDetails() {
-    return this.project?.testSuites || [];
+    return this.project?.quTeDetails || [];
   }
 
-  getTestCaseType(testSuite: any): string {
-    // Assuming all test cases in a suite have the same type, or we pick the first one
-    if (testSuite.testCases && testSuite.testCases.length > 0) {
-      return testSuite.testCases[0].type || 'Unknown';
-    }
-    return 'Empty Suite';
+  getTestCaseType(suite: any): string {
+    return suite.suiteType || 'Unknown';
   }
 
   // QuMu Logic
   hasQuMu(): boolean {
-    return !!(this.project?.mutantCycles && this.project.mutantCycles.length > 0);
+    return !!(this.project?.quMuDetails && this.project.quMuDetails.length > 0);
   }
 
   getQuMuDetails() {
-    return this.project?.mutantCycles || [];
+    return this.project?.quMuDetails || [];
   }
 
   openTool(toolName: string) {
@@ -96,13 +92,13 @@ export class ProjectDetailsComponent implements OnInit {
       window.location.href = `${environment.quMuUrl}/project/${this.project.id}`;
     } else if (toolName === 'QuCo') {
       let localSName = 'selectedProjectId_algorithm'
-      if (this.project.qProgram.generator.type === 'MATRIX') {
+      if (this.project.quCoDetails?.generatorType === 'MATRIX') {
         localSName = 'selectedProjectId_matrices'
       }
 
       localStorage.setItem(`${localSName}`, this.project.id);
 
-      window.location.href = `${environment.quCoUrl}/${this.project.qProgram.generator.type}`;
+      window.location.href = `${environment.quCoUrl}/${this.project.quCoDetails?.generatorType}`;
 
     } else if (toolName === 'QuTe') {
       window.location.href = `${environment.quTeUrl}/project/${this.project.id}`;
