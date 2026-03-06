@@ -8,10 +8,10 @@ import { AuthService } from '../../services/auth.service';
   standalone: true,
   imports: [CommonModule, RouterModule],
   templateUrl: './fa2-code.component.html',
-  styleUrl: './fa2-code.component.css'
+  styleUrls: ['./fa2-code.component.css']
 })
 export class Fa2Code {
-  @ViewChildren('input1, input2, input3, input4, input5, input6')
+  @ViewChildren('digitInput')
   inputs!: QueryList<ElementRef>;
 
   verificationCode: string = '';
@@ -63,7 +63,7 @@ export class Fa2Code {
   updateVerificationCode(): void {
     const inputElements = this.inputs.toArray();
     this.verificationCode = inputElements
-      .map(input => input.nativeElement.value)
+      .map((input: ElementRef) => input.nativeElement.value)
       .join('');
   }
 
