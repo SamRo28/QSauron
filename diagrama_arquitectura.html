@@ -1,0 +1,415 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>System Architecture Diagram</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #f5f7fa;
+            --bg-secondary: #e8f5e9;
+            --bg-gradient: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
+
+            --glass-bg-card: rgba(255, 255, 255, 1);
+            --text-primary: #1a1f2e;
+
+            --accent-primary: #10b981;
+            --accent-secondary: #059669;
+
+            --border-glass: rgba(16, 185, 129, 0.4);
+            --shadow-glass: rgba(6, 95, 70, 0.15);
+            --shadow-glass-strong: rgba(6, 95, 70, 0.25);
+
+            --radius-md: 12px;
+            --radius-lg: 16px;
+        }
+
+        body {
+            background: var(--bg-gradient);
+            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            min-height: 100vh;
+            margin: 0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-sizing: border-box;
+        }
+
+        .diagram-container {
+            position: relative;
+            width: 100%;
+            max-width: 900px;
+            /* Responsive height relying on aspect ratio or fixed max */
+            height: 80vh;
+            max-height: 600px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid var(--border-glass);
+            border-radius: var(--radius-lg);
+            padding: 1.5rem;
+            box-shadow: 0 8px 32px var(--shadow-glass), inset 0 1px 0 rgba(255, 255, 255, 0.5);
+            overflow: hidden;
+            /* prevents lines spilling out */
+        }
+
+        .node-layer {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            display: grid;
+            /* 4 rows */
+            grid-template-rows: repeat(4, 1fr);
+            /* simpler 3 column layout to avoid overlaps */
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            z-index: 2;
+        }
+
+        .node {
+            background: #ffffff;
+            border: 2px solid var(--border-glass);
+            border-radius: var(--radius-md);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 10px 15px;
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-primary);
+            box-shadow: 0 4px 16px var(--shadow-glass);
+            transition: all 250ms ease;
+            z-index: 10;
+            width: 160px;
+            margin: auto;
+        }
+
+        .node:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px var(--shadow-glass-strong);
+            border-color: var(--accent-primary);
+        }
+
+        /* Inline Card Icons (Colorized natively) */
+        .card-icon {
+            width: 24px;
+            height: 24px;
+            color: var(--accent-primary);
+        }
+
+        /* Make inline SVGs scale correctly */
+        .card-icon svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Specific positions to prevent lines crossing behind nodes */
+        /* Row 1 */
+        #fe-qsauron {
+            grid-column: 2 / 3;
+            grid-row: 1;
+        }
+
+        /* Row 2 */
+        #quco {
+            grid-column: 1 / 2;
+            grid-row: 2;
+        }
+
+        #qute {
+            grid-column: 2 / 3;
+            grid-row: 2;
+        }
+
+        #qumu {
+            grid-column: 3 / 4;
+            grid-row: 2;
+        }
+
+        /* Row 3 */
+        #be-proyectos {
+            grid-column: 2 / 3;
+            grid-row: 3;
+        }
+
+        #be-alaride {
+            grid-column: 3 / 4;
+            grid-row: 3;
+        }
+
+        /* move alaride right so it doesn't block row 4 below */
+
+        /* Row 4 */
+        #be-ejecuciones {
+            grid-column: 2 / 3;
+            grid-row: 4;
+        }
+
+        svg.connections {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .line {
+            stroke: url(#gradient-line);
+            stroke-width: 3;
+            /* matching home thickness */
+            fill: none;
+            stroke-linecap: round;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="diagram-container" id="container">
+        <svg class="connections" id="svg-layer">
+            <defs>
+                <!-- Like the home page diagram gradient -->
+                <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="100%">
+                    <stop offset="0%" stop-color="#10b981" stop-opacity="0.4" />
+                    <stop offset="50%" stop-color="#10b981" stop-opacity="1" />
+                    <stop offset="100%" stop-color="#10b981" stop-opacity="0.4" />
+                </linearGradient>
+            </defs>
+        </svg>
+
+        <div class="node-layer">
+            <!-- Row 1 -->
+            <div class="node" id="fe-qsauron">
+                <div class="card-icon">
+                    <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="16" cy="16" r="14" stroke="currentColor" stroke-width="2" />
+                        <path d="M16 6C16 6 26 12 26 16C26 20 16 26 16 26C16 26 6 20 6 16C6 12 16 6 16 6Z"
+                            stroke="currentColor" stroke-width="2" />
+                        <circle cx="16" cy="16" r="4" fill="currentColor" />
+                    </svg>
+                </div>
+                FE - QSauron
+            </div>
+
+            <!-- Row 2 -->
+            <div class="node" id="quco">
+                <div class="card-icon">
+                    <svg viewBox="0 0 400 400" xmlns="http://www.w3.org/2000/svg">
+                        <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="currentColor"
+                            stroke-width="8" />
+                        <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="currentColor" stroke-width="8"
+                            transform="rotate(60 200 200)" />
+                        <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="currentColor" stroke-width="8"
+                            transform="rotate(-60 200 200)" />
+                        <circle cx="200" cy="125" r="14" fill="currentColor" stroke="currentColor" stroke-width="6" />
+                        <circle cx="335" cy="240" r="14" fill="currentColor" stroke="currentColor" stroke-width="6" />
+                        <circle cx="65" cy="240" r="14" fill="currentColor" stroke="currentColor" stroke-width="6" />
+                        <circle cx="200" cy="200" r="55" fill="none" stroke="currentColor" stroke-width="8" />
+                        <text x="200" y="215" text-anchor="middle" font-size="42"
+                            font-family="Arial, Helvetica, sans-serif" font-weight="bold" fill="currentColor">Q /
+                            Ɔ</text>
+                    </svg>
+                </div>
+                QuCo
+            </div>
+            <div class="node" id="qute">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M8 12L11 15L16 9" stroke="currentColor" stroke-width="2" stroke-linecap="round"
+                            stroke-linejoin="round" />
+                        <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3"
+                            opacity="0.4" />
+                        <circle cx="5" cy="5" r="1.5" fill="currentColor" />
+                        <circle cx="19" cy="5" r="1.5" fill="currentColor" />
+                        <circle cx="5" cy="19" r="1.5" fill="currentColor" />
+                        <circle cx="19" cy="19" r="1.5" fill="currentColor" />
+                    </svg>
+                </div>
+                QuTe
+            </div>
+            <div class="node" id="qumu">
+                <div class="card-icon">
+                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="12" cy="12" r="3" stroke="currentColor" stroke-width="2" />
+                        <path d="M12 2v4M12 18v4M22 12h-4M6 12H2" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" />
+                        <circle cx="12" cy="12" r="8" stroke="currentColor" stroke-width="1.5" stroke-dasharray="2 3"
+                            opacity="0.4" />
+                        <circle cx="5" cy="5" r="1.5" fill="currentColor" />
+                        <circle cx="19" cy="5" r="1.5" fill="currentColor" />
+                        <circle cx="5" cy="19" r="1.5" fill="currentColor" />
+                        <circle cx="19" cy="19" r="1.5" fill="currentColor" />
+                    </svg>
+                </div>
+                QuMu
+            </div>
+
+            <!-- Row 3 -->
+            <div class="node" id="be-proyectos">
+                BE Proyectos
+            </div>
+            <div class="node" id="be-alaride">
+                BE Alaride
+            </div>
+
+            <!-- Row 4 -->
+            <div class="node" id="be-ejecuciones">
+                BE Ejecuciones
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const connections = [
+            ['fe-qsauron', 'quco'],
+            ['fe-qsauron', 'qute'],
+            ['fe-qsauron', 'qumu'],
+            ['fe-qsauron', 'be-proyectos'],
+
+            ['quco', 'be-proyectos'],
+            ['quco', 'be-ejecuciones'],
+
+            ['qute', 'be-proyectos'],
+            ['qute', 'be-ejecuciones'],
+
+            ['qumu', 'be-proyectos'],
+            ['qumu', 'be-ejecuciones'],
+
+            ['be-proyectos', 'be-alaride'] // This is already BE Proyectos to BE Alaride
+        ];
+
+        function drawLines() {
+            const svg = document.getElementById('svg-layer');
+            const container = document.getElementById('container');
+            const containerRect = container.getBoundingClientRect();
+
+            // Clear paths but KEEP defs
+            const paths = svg.querySelectorAll('path');
+            paths.forEach(p => p.remove());
+
+            connections.forEach(([id1, id2]) => {
+                const el1 = document.getElementById(id1);
+                const el2 = document.getElementById(id2);
+
+                if (!el1 || !el2) return;
+
+                const rect1 = el1.getBoundingClientRect();
+                const rect2 = el2.getBoundingClientRect();
+
+                let startX, startY, endX, endY;
+
+                // Smart Anchor Logic
+                if (id1 === 'fe-qsauron') {
+                    // Start from bottom center
+                    startX = rect1.left + rect1.width / 2 - containerRect.left;
+                    startY = rect1.bottom - containerRect.top;
+
+                    // End at top center of targets
+                    endX = rect2.left + rect2.width / 2 - containerRect.left;
+                    endY = rect2.top - containerRect.top;
+                } else if (id1 === 'quco' || id1 === 'qute' || id1 === 'qumu') {
+                    // Going to BE Proyectos and BE Ejecuciones
+                    // Start from bottom center
+                    startX = rect1.left + rect1.width / 2 - containerRect.left;
+                    startY = rect1.bottom - containerRect.top;
+
+                    if (id2 === 'be-proyectos') {
+                        // End at top of BE Proyectos, spread out to prevent overlapping lines
+                        if (id1 === 'quco') {
+                            endX = rect2.left - containerRect.left + 40; // Left side
+                        } else if (id1 === 'qumu') {
+                            endX = rect2.right - containerRect.left - 40; // Right side
+                        } else {
+                            endX = rect2.left + rect2.width / 2 - containerRect.left; // Center for QuTe
+                        }
+                        endY = rect2.top - containerRect.top;
+                    } else {
+                        // End at appropriate side of ejecuciones to prevent overlap
+                        if (id1 === 'quco') {
+                            endX = rect2.left - containerRect.left + 20; // Left side of top
+                            endY = rect2.top - containerRect.top;
+                        } else if (id1 === 'qumu') {
+                            endX = rect2.right - containerRect.left - 20; // Right side of top
+                            endY = rect2.top - containerRect.top;
+                        } else {
+                            endX = rect2.left + rect2.width / 2 - containerRect.left;
+                            endY = rect2.top - containerRect.top;
+                        }
+                    }
+                } else if (id1 === 'be-proyectos' && id2 === 'be-alaride') {
+                    // BE Proyectos to BE Alaride is a horizontal left-to-right connection
+                    startX = rect1.right - containerRect.left;
+                    startY = rect1.top + rect1.height / 2 - containerRect.top;
+
+                    endX = rect2.left - containerRect.left;
+                    endY = rect2.top + rect2.height / 2 - containerRect.top;
+                } else {
+                    // Fallback
+                    startX = rect1.left + rect1.width / 2 - containerRect.left;
+                    startY = rect1.bottom - containerRect.top;
+                    endX = rect2.left + rect2.width / 2 - containerRect.left;
+                    endY = rect2.top - containerRect.top;
+                }
+
+                // Fix for SVG gradient bounding box issue on perfectly horizontal/vertical lines
+                if (Math.abs(startX - endX) < 0.1) endX += 0.1;
+                if (Math.abs(startY - endY) < 0.1) endY += 0.1;
+
+                const path = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+                path.setAttribute('class', 'line');
+
+                // Advanced Curve Routing
+                let d = '';
+
+                if (id1 === 'be-proyectos' && id2 === 'be-alaride') {
+                    // Simple Curve horizontally
+                    d = `M ${startX} ${startY} C ${(startX + endX) / 2} ${startY}, ${(startX + endX) / 2} ${endY}, ${endX} ${endY}`;
+                }
+                else if (id1 === 'fe-qsauron' && id2 === 'be-proyectos') {
+                    // Route leftwards through the gap between QuCo and QuTe
+                    let detourX = startX - 160;
+                    d = `M ${startX} ${startY} C ${detourX} ${startY + 30}, ${detourX} ${endY - 30}, ${endX} ${endY}`;
+                }
+                else if (id1 === 'qute' && id2 === 'be-ejecuciones') {
+                    // Route rightwards through the gap between Promoyectes and Alaride
+                    let detourX = startX + 160;
+                    d = `M ${startX} ${startY} C ${detourX} ${startY + 30}, ${detourX} ${endY - 30}, ${endX} ${endY}`;
+                }
+                else if (id1 === 'qumu' && id2 === 'be-ejecuciones') {
+                    // Avoid crossing BE Alaride directly underneath. Route inwards to the left gap first.
+                    startX = rect1.left - containerRect.left + 20; // Anchor bottom left side of qumu
+
+                    d = `M ${startX} ${startY} C ${startX - 50} ${startY + 40}, ${endX + 100} ${endY - 40}, ${endX} ${endY}`;
+                }
+                else if (id1 === 'quco' && id2 === 'be-ejecuciones') {
+                    // Route around outside left
+                    startX = rect1.right - containerRect.left - 20; // Anchor bottom right of quco
+
+                    d = `M ${startX} ${startY} C ${startX + 50} ${startY + 40}, ${endX - 100} ${endY - 40}, ${endX} ${endY}`;
+                }
+                else {
+                    // Default Vertical S-Curve
+                    d = `M ${startX} ${startY} C ${startX} ${(startY + endY) / 2}, ${endX} ${(startY + endY) / 2}, ${endX} ${endY}`;
+                }
+
+                path.setAttribute('d', d);
+
+                svg.appendChild(path);
+            });
+        }
+
+        window.addEventListener('load', drawLines);
+        window.addEventListener('resize', drawLines);
+        drawLines();
+        setTimeout(drawLines, 100);
+    </script>
+</body>
+
+</html>
