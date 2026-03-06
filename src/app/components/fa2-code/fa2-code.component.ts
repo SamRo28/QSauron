@@ -37,6 +37,12 @@ export class Fa2Code {
   }
 
   onKeyDown(event: KeyboardEvent, prev: HTMLInputElement | null, current: HTMLInputElement): void {
+    if (event.key === 'Enter') {
+      this.updateVerificationCode();
+      this.verifyCode();
+      return;
+    }
+
     // Si presiona backspace y el campo actual está vacío, ir al anterior
     if (event.key === 'Backspace' && !current.value && prev) {
       prev.focus();
@@ -48,7 +54,8 @@ export class Fa2Code {
       event.key !== 'Backspace' &&
       event.key !== 'Tab' &&
       event.key !== 'ArrowLeft' &&
-      event.key !== 'ArrowRight') {
+      event.key !== 'ArrowRight' &&
+      event.key !== 'Enter') {
       event.preventDefault();
     }
   }
