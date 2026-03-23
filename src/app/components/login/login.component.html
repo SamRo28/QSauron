@@ -60,8 +60,13 @@
         </button>
       </div>
 
-      <!-- Register link -->
+      <!-- Register & Recovery links -->
       <div class="form-group text-center">
+        <p>
+          <a href="#" (click)="navigateToRecovery(); $event.preventDefault()" class="recovery-link">
+            Forgot password?
+          </a>
+        </p>
         <p>Don't have an account?
           <a href="#" (click)="navigateToRegister(); $event.preventDefault()" class="register-link">
             Register here

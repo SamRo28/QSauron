@@ -78,6 +78,7 @@ export class Fa2Code {
 
     this.authService.verify2FACode(email, this.verificationCode).subscribe({
       next: (res: any) => {
+        // Backend now returns JSON and sets cookies
         this.authService.setSession(email);
         this.router.navigate(['/dashboard']);
       },

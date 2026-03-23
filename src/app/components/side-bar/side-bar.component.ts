@@ -26,12 +26,10 @@ export class SideBarComponent implements OnInit {
         this.authService.currentUser$.subscribe(user => {
             if (user) {
                 this.loadUserProjects();
+            } else {
+                this.projects = [];
             }
         });
-
-        if (this.authService.getCurrentUser()) {
-            this.loadUserProjects();
-        }
     }
 
     loadUserProjects() {

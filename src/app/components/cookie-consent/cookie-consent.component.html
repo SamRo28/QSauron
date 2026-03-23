@@ -1,0 +1,16 @@
+<div class="cookie-banner-wrapper" *ngIf="showConsent">
+  <div class="cookie-glass-card">
+    <div class="cookie-content">
+      <p>
+        We use our own and third-party cookies to improve our services, customize your experience, and analyze our website traffic. 
+        You can choose to accept all cookies or only the essential ones required for the site to function properly. 
+        For more detailed information, please read our 
+        <a href="https://www.uclm.es/legal/informacion-legal/detalle-politica-cookies" target="_blank" rel="noopener noreferrer">Cookies Policy</a>.
+      </p>
+    </div>
+    <div class="cookie-actions">
+      <button class="btn-cookie btn-essential" (click)="acceptEssentialCookies()">Accept Essential</button>
+      <button class="btn-cookie btn-all" (click)="acceptAllCookies()">Accept All</button>
+    </div>
+  </div>
+</div>

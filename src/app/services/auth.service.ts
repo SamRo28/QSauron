@@ -23,6 +23,7 @@ import { environment } from '../../environments/environment';
 })
 export class AuthService {
   private readonly API_URL = `${environment.apiUrl}/users`;
+  private readonly RECOVERY_URL = `${environment.apiUrl}/recovery`;
   private readonly PROJECTS_URL = `${environment.apiUrl}/projects`;
   // Token is now handled via HttpOnly cookie
   private readonly USER_KEY = 'current_user';
@@ -54,12 +55,20 @@ export class AuthService {
 
   /**
    * Login user
-   * Returns validation string:
-   * - "" (empty) -> 2FA required
-   * - <token/string> -> Success
+   * Returns validation response:
+   * - { status: '2fa' } (or similar) -> 2FA required
+   * - { token: '...' } -> Success
    */
-  login(user: User): Observable<string> {
-    return this.http.post<string>(`${this.API_URL}/login`, user, { responseType: 'text' as 'json' });
+  login(user: User): Observable<any> {
+    this.clearSession(); // Ensure fresh start
+    return this.http.post<any>(`${this.API_URL}/login`, user);
+  }
+
+  /**
+   * Refresh the authentication token using the refresh token cookie
+   */
+  refreshToken(): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/refreshToken`, {}, { withCredentials: true });
   }
 
   /**
@@ -80,6 +89,33 @@ export class AuthService {
   }
 
   /**
+   * Step 1: Request Password Recovery
+   */
+  requestRecovery(email: string): Observable<string> {
+    return this.http.post(`${this.RECOVERY_URL}/request`, { email }, { responseType: 'text' });
+  }
+
+  /**
+   * Step 2: Validate Recovery Code
+   */
+  validateRecoveryCode(email: string, tokenId: string, code: string): Observable<any> {
+    return this.http.post<any>(`${this.RECOVERY_URL}/validate`, { email, tokenId, code }, { withCredentials: true }).pipe(
+      tap(() => {
+        // The backend sets SESSION_TOKEN and REFRESH_TOKEN cookies.
+        // We set the session locally to indicate the user is now authenticated (temporarily for reset).
+        this.setSession(email);
+      })
+    );
+  }
+
+  /**
+   * Step 3: Reset Password
+   */
+  resetPassword(email: string, newPassword: string): Observable<any> {
+    return this.http.post<any>(`${this.RECOVERY_URL}/reset`, { email, newPassword }, { withCredentials: true });
+  }
+
+  /**
    * Get authentication token
    * @deprecated Token is now in HttpOnly cookie
    */
@@ -87,9 +123,6 @@ export class AuthService {
     return null;
   }
 
-  /**
-   * Check if user is authenticated
-   */
   /**
    * Check if user is authenticated
    */
@@ -110,8 +143,8 @@ export class AuthService {
     );
   }
 
-  verify2FACode(email: string, code: string): Observable<string> {
-    return this.http.post<string>(`${this.API_URL}/verify2FACode`, { email, code }, { responseType: 'text' as 'json' });
+  verify2FACode(email: string, code: string): Observable<any> {
+    return this.http.post<any>(`${this.API_URL}/verify2FACode`, { email, code });
   }
 
   getUser(): Observable<string> {
@@ -120,6 +153,7 @@ export class AuthService {
       responseType: 'text' as 'json'
     }).pipe(
       tap(user => {
+        console.log('GetUser response:', user);
         if (user) {
           this.setSession(user);
         }
@@ -129,7 +163,7 @@ export class AuthService {
 
 
   /**
-   * Get current user email
+   * Get current user email from local storage (real session)
    */
   getCurrentUser(): string | null {
     if (typeof window !== 'undefined') {
@@ -186,11 +220,8 @@ export class AuthService {
 
   private hasUser(): Observable<boolean> {
     if (isPlatformBrowser(this.platformId)) {
-      // Ideally we should verify with backend if token/session is valid,
-      // but for now checking existence of expected data in storage.
-      // The previous code called this.getUser() but didnt subscribe, so it did nothing.
-      // We'll just check storage for now to prevent the crash.
-      const user = sessionStorage.getItem('email');
+      // Check if we have a user in localStorage (real session)
+      const user = localStorage.getItem(this.USER_KEY);
       if (user) {
         return of(true);
       }

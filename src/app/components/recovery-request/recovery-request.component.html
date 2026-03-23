@@ -1,0 +1,41 @@
+<div class="recovery-container">
+  <div class="recovery-card">
+    <div class="recovery-header">
+      <div class="logo-container">
+        <img src="assets/logo.svg" alt="QSauron Logo" width="64" height="64">
+      </div>
+      <h2>Recover Password</h2>
+      <p>Enter your email to receive a recovery code</p>
+    </div>
+
+    <form [formGroup]="recoveryForm" (ngSubmit)="onSubmit()" class="recovery-form">
+      <div class="form-group">
+        <label for="email">Email:</label>
+        <input type="email" id="email" formControlName="email" class="glass-input"
+          [class.is-invalid]="submitted && f['email'].errors" placeholder="Enter your registered email">
+        <div *ngIf="submitted && f['email'].errors" class="invalid-feedback">
+          <div *ngIf="f['email'].errors['required']">Email is required</div>
+          <div *ngIf="f['email'].errors['email']">Email must have a valid format</div>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+      <div *ngIf="success" class="alert alert-success">
+        Recovery requested! Redirecting to validation step...
+      </div>
+
+      <div class="form-group">
+        <button type="submit" class="glass-btn w-full" [disabled]="loading || success">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Requesting...' : 'Request recovery' }}
+        </button>
+      </div>
+
+      <div class="form-group text-center">
+        <a href="#" (click)="navigateToLogin(); $event.preventDefault()" class="back-link">
+          Back to Login
+        </a>
+      </div>
+    </form>
+  </div>
+</div>

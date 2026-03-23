@@ -13,7 +13,7 @@
         "build": {
           "builder": "@angular-devkit/build-angular:browser",
           "options": {
-            "outputPath": "/Users/samuel/Documents/Proyectos/Builds",
+            "outputPath": "/Users/samuel/Documents/Proyectos/Builds/qsauron",
             "index": "src/index.html",
             "main": "src/main.ts",
             "polyfills": [

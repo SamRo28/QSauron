@@ -18,23 +18,21 @@ export class HomeComponent implements OnInit {
   constructor(private authService: AuthService, private router: Router) { }
 
   ngOnInit(): void {
+    // Session check is now triggered manually via checkSession button
+  }
+
+  checkSession() {
     this.authService.getUser().subscribe({
       next: (user) => {
         if (user) {
           this.router.navigate(['/dashboard']);
+        } else {
+          this.router.navigate(['/login']);
         }
       },
       error: () => {
-        // User not logged in, stay on home page
+        this.router.navigate(['/login']);
       }
     });
-  }
-
-  checkSession() {
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate(['/dashboard']);
-    } else {
-      this.router.navigate(['/login']);
-    }
   }
 }

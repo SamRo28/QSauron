@@ -1,0 +1,45 @@
+<div class="recovery-container">
+  <div class="recovery-card">
+    <div class="recovery-header">
+      <div class="logo-container">
+        <img src="assets/logo.svg" alt="QSauron Logo" width="64" height="64">
+      </div>
+      <h2>Validate Code</h2>
+      <p>Enter the 6-digit code sent to <strong>{{ email }}</strong></p>
+    </div>
+
+    <form [formGroup]="validateForm" (ngSubmit)="onSubmit()" class="recovery-form">
+      <div class="form-group">
+        <label for="code">Verification Code:</label>
+        <div class="code-input-wrapper">
+          <input type="text" id="code" formControlName="code" class="glass-input code-input"
+            [class.is-invalid]="submitted && f['code'].errors" placeholder="123456" maxlength="6">
+        </div>
+        <div *ngIf="submitted && f['code'].errors" class="invalid-feedback">
+          <div *ngIf="f['code'].errors['required']">Code is required</div>
+          <div *ngIf="f['code'].errors['minlength'] || f['code'].errors['maxlength']">
+            Code must be exactly 6 digits
+          </div>
+        </div>
+      </div>
+
+      <div *ngIf="error" class="alert alert-danger">{{ error }}</div>
+
+      <div class="form-group">
+        <button type="submit" class="glass-btn w-full" [disabled]="loading">
+          <span *ngIf="loading" class="spinner"></span>
+          {{ loading ? 'Validating...' : 'Validate' }}
+        </button>
+      </div>
+
+      <div class="form-group text-center">
+        <p class="resend-text">
+          Didn't receive the code?
+          <a href="#" (click)="resendCode(); $event.preventDefault()" class="resend-link">
+            Try again
+          </a>
+        </p>
+      </div>
+    </form>
+  </div>
+</div>

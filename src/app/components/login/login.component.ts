@@ -34,10 +34,7 @@ export class LoginComponent implements OnInit {
   }
 
   ngOnInit() {
-    // Redirect if already logged in
-    if (this.authService.isAuthenticated()) {
-      this.router.navigate([this.returnUrl]);
-    }
+    // We'll let HomeComponent or manual navigation handle this to avoid interference during login process
   }
 
   // Convenience getter for easy access to form fields
@@ -53,27 +50,35 @@ export class LoginComponent implements OnInit {
     }
 
     this.loading = true;
+    console.log('Attempting login for:', this.loginForm.value.email);
+
     this.authService.login(this.loginForm.value)
       .subscribe({
-        next: (response: string) => {
-          if (response === '2fa') {
-            // Empty string means 2FA is required
-            // We may want to pass the email or other context if needed, but 
-            // authService handles the initial login call.
-            // Storing email temporarily for 2FA might be useful if not already handled.
-            // For now, redirect to 2FA code entry.
-            // Also, check if 2fa-code component expects state or session info.
-            // AuthService sets session on success, but here it's not full success yet.
-            // Ensure 2fa-code knows who is verifying.
+        next: (response: any) => {
+          console.log('Login successful response:', response);
+          
+          // The backend might return:
+          // 1. A plain string "2fa"
+          // 2. An object { status: "2fa" }
+          // 3. An object { token: "...", refreshToken: "..." }
+          
+          const is2FA = response === '2fa' || 
+                        response?.status === '2fa' || 
+                        response?.message === '2fa' ||
+                        (typeof response === 'object' && Object.keys(response).length === 0); // fallback for empty obj if used for 2fa
+          
+          if (is2FA) {
+            console.log('2FA required, redirecting...');
             sessionStorage.setItem('email', this.loginForm.value.email);
             this.router.navigate(['/2fa-code']);
           } else {
-            // Normal success
+            console.log('Login success, setting session...');
             this.authService.setSession(this.loginForm.value.email);
             this.router.navigate(['/dashboard']);
           }
         },
-        error: (error: Error) => {
+        error: (error: any) => {
+          console.error('Login error:', error);
           this.error = 'Incorrect username or password';
           this.loading = false;
         }
@@ -86,5 +91,9 @@ export class LoginComponent implements OnInit {
 
   navigateToRegister() {
     this.router.navigate(['/register']);
+  }
+
+  navigateToRecovery() {
+    this.router.navigate(['/recovery/request']);
   }
 }

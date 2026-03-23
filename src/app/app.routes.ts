@@ -8,6 +8,9 @@ import { authGuard } from './guards/auth.guard';
 import { HomeComponent } from './components/home/home.component';
 import { DashboardHomeComponent } from './components/dashboard-home/dashboard-home.component';
 import { ProjectDetailsComponent } from './components/project-details/project-details.component';
+import { RecoveryRequestComponent } from './components/recovery-request/recovery-request.component';
+import { RecoveryValidateComponent } from './components/recovery-validate/recovery-validate.component';
+import { RecoveryResetComponent } from './components/recovery-reset/recovery-reset.component';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -24,5 +27,8 @@ export const routes: Routes = [
   },
   { path: '2fa-qr', component: Fa2QrComponent },
   { path: '2fa-code', component: Fa2Code },
+  { path: 'recovery/request', component: RecoveryRequestComponent },
+  { path: 'recovery/validate', component: RecoveryValidateComponent },
+  { path: 'recovery/reset', component: RecoveryResetComponent },
   { path: '**', redirectTo: '' }
 ];
