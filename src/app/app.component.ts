@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { CookieConsentComponent } from './components/cookie-consent/cookie-consent.component';
+import { ThemeService } from './services/theme.service';
 
 @Component({
   selector: 'app-root',
@@ -11,4 +12,5 @@ import { CookieConsentComponent } from './components/cookie-consent/cookie-conse
 })
 export class AppComponent {
   title = 'QSauron';
+  private themeService = inject(ThemeService);
 }

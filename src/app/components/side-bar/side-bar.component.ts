@@ -55,11 +55,14 @@ export class SideBarComponent implements OnInit {
 
     toggleProjectExpansion(project: ProjectSummary, event: Event) {
         event.stopPropagation();
-        if (this.expandedProjects.has(project.id)) {
-            this.expandedProjects.delete(project.id);
+        const newSet = new Set(this.expandedProjects);
+        if (newSet.has(project.id)) {
+            newSet.delete(project.id);
         } else {
-            this.expandedProjects.add(project.id);
+            newSet.add(project.id);
         }
+        this.expandedProjects = newSet;
+        console.log('Project visibility toggled:', project.name, 'Expanded:', this.expandedProjects.has(project.id));
     }
 
     selectProject(project: ProjectSummary) {

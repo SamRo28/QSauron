@@ -1,13 +1,13 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
-import { Router, ActivatedRoute } from '@angular/router';
+import { Router, ActivatedRoute, RouterLink } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, RouterLink],
   templateUrl: './login.component.html',
   styleUrls: ['./login.component.css']
 })
@@ -56,17 +56,17 @@ export class LoginComponent implements OnInit {
       .subscribe({
         next: (response: any) => {
           console.log('Login successful response:', response);
-          
+
           // The backend might return:
           // 1. A plain string "2fa"
           // 2. An object { status: "2fa" }
           // 3. An object { token: "...", refreshToken: "..." }
-          
-          const is2FA = response === '2fa' || 
-                        response?.status === '2fa' || 
-                        response?.message === '2fa' ||
-                        (typeof response === 'object' && Object.keys(response).length === 0); // fallback for empty obj if used for 2fa
-          
+
+          const is2FA = response === '2fa' ||
+            response?.status === '2fa' ||
+            response?.message === '2fa' ||
+            (typeof response === 'object' && Object.keys(response).length === 0); // fallback for empty obj if used for 2fa
+
           if (is2FA) {
             console.log('2FA required, redirecting...');
             sessionStorage.setItem('email', this.loginForm.value.email);

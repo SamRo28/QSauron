@@ -19,6 +19,7 @@ export class RecoveryResetComponent implements OnInit {
   success = false;
   email = '';
   showPassword = false;
+  showConfirmPassword = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -26,9 +27,9 @@ export class RecoveryResetComponent implements OnInit {
     private authService: AuthService
   ) {
     this.resetForm = this.formBuilder.group({
-      newPassword: ['', [Validators.required, Validators.minLength(6)]],
+      newPassword: ['', [Validators.required, Validators.minLength(8)]],
       confirmPassword: ['', [Validators.required]]
-    }, { validator: this.passwordMatchValidator });
+    }, { validators: this.passwordMatchValidator });
   }
 
   ngOnInit() {
@@ -38,15 +39,60 @@ export class RecoveryResetComponent implements OnInit {
     }
   }
 
-  passwordMatchValidator(g: FormGroup) {
-    return g.get('newPassword')?.value === g.get('confirmPassword')?.value
-      ? null : { 'mismatch': true };
+  // Custom validator: strict password rules + match check
+  passwordMatchValidator(form: FormGroup) {
+    const password = form.get('newPassword');
+    const confirmPassword = form.get('confirmPassword');
+
+    // Strict Password Rules
+    if (password && password.value) {
+      const value = password.value;
+      const hasUpperCase = /[A-Z]/.test(value);
+      const hasLowerCase = /[a-z]/.test(value);
+      const hasNumeric = /[0-9]/.test(value);
+      const hasSpecialChar = /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(value);
+      const minLength = value.length >= 8;
+
+      if (!hasUpperCase || !hasLowerCase || !hasNumeric || !hasSpecialChar || !minLength) {
+        password.setErrors({
+          ...password.errors,
+          strictPassword: true
+        });
+      } else {
+        if (password.errors) {
+          delete password.errors['strictPassword'];
+          if (Object.keys(password.errors).length === 0) {
+            password.setErrors(null);
+          }
+        }
+      }
+    }
+
+    if (password && confirmPassword && password.value !== confirmPassword.value) {
+      return { mismatch: true };
+    }
+    return null;
   }
 
   get f() { return this.resetForm.controls; }
 
+  // Password validation helpers for UI
+  get passwordValue(): string {
+    return this.resetForm.get('newPassword')?.value || '';
+  }
+
+  get hasMinLength() { return this.passwordValue.length >= 8; }
+  get hasUpperCase() { return /[A-Z]/.test(this.passwordValue); }
+  get hasLowerCase() { return /[a-z]/.test(this.passwordValue); }
+  get hasNumeric() { return /[0-9]/.test(this.passwordValue); }
+  get hasSpecialChar() { return /[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/.test(this.passwordValue); }
+
   togglePassword() {
     this.showPassword = !this.showPassword;
+  }
+
+  toggleConfirmPassword() {
+    this.showConfirmPassword = !this.showConfirmPassword;
   }
 
   onSubmit() {
@@ -68,7 +114,7 @@ export class RecoveryResetComponent implements OnInit {
           // Clear session storage used for recovery
           sessionStorage.removeItem('recoveryEmail');
           sessionStorage.removeItem('recoveryTokenId');
-          
+
           setTimeout(() => {
             this.router.navigate(['/dashboard']);
           }, 2000);

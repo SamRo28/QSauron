@@ -2,30 +2,27 @@
     display: contents;
 }
 
-/* Sidebar - Opción A: Glassmorphism Oscuro */
+/* Sidebar - Glassmorphism Quantum */
 .sidebar {
     width: 280px;
-    background: linear-gradient(180deg, rgba(5, 150, 105, 0.85) 0%, rgba(4, 120, 87, 0.9) 100%);
-    /* Consistent Emerald Gradient */
+    background: var(--glass-bg-sidebar);
     backdrop-filter: blur(16px) saturate(180%);
     -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border-right: 1px solid rgba(255, 255, 255, 0.1);
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    /* Subtle top highlight */
+    border-right: 1px solid var(--border-glass-light);
+    border-top: 1px solid var(--border-glass-light);
     overflow-y: auto;
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     z-index: 900;
-    box-shadow: 4px 0 24px rgba(0, 0, 0, 0.05);
+    box-shadow: 4px 0 24px var(--shadow-glass);
 }
 
 .sidebar.collapsed {
     width: 70px;
-    /* Slightly wider for better icon centering */
 }
 
 .sidebar-header {
     padding: 24px 20px;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 1px solid var(--border-glass-light);
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -40,7 +37,7 @@
     margin: 0;
     font-size: 1.1rem;
     font-weight: 600;
-    color: #ecfdf5;
+    color: var(--text-primary);
     letter-spacing: 0.02em;
 }
 
@@ -52,9 +49,9 @@
 
 .btn-refresh-small,
 .btn-toggle-sidebar {
-    background: rgba(255, 255, 255, 0.1);
-    border: 1px solid rgba(255, 255, 255, 0.15);
-    color: rgba(236, 253, 245, 0.8);
+    background: var(--glass-bg);
+    border: 1px solid var(--border-glass-light);
+    color: var(--text-secondary);
     cursor: pointer;
     padding: 6px;
     border-radius: 6px;
@@ -63,8 +60,9 @@
 
 .btn-refresh-small:hover,
 .btn-toggle-sidebar:hover {
-    background-color: rgba(255, 255, 255, 0.25);
-    color: white;
+    background-color: var(--glass-bg-hover);
+    color: var(--accent-primary);
+    border-color: var(--accent-primary);
 }
 
 .sidebar-content {
@@ -75,27 +73,27 @@
 .sidebar-error {
     padding: 20px;
     text-align: center;
-    color: #a7f3d0;
+    color: var(--text-secondary);
 }
 
 .loading-spinner-small {
     width: 20px;
     height: 20px;
-    border: 2px solid rgba(255, 255, 255, 0.2);
-    border-top: 2px solid #34d399;
+    border: 2px solid var(--border-glass-light);
+    border-top: 2px solid var(--accent-primary);
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin: 0 auto 10px;
 }
 
 .sidebar-error .error-text {
-    color: #fca5a5;
+    color: #ef4444;
     font-size: 0.85rem;
     margin-bottom: 10px;
 }
 
 .btn-retry-small {
-    background: rgba(239, 68, 68, 0.8);
+    background: var(--accent-primary);
     color: white;
     border: none;
     padding: 6px 12px;
@@ -107,7 +105,7 @@
 .no-projects-sidebar {
     padding: 20px;
     text-align: center;
-    color: rgba(236, 253, 245, 0.6);
+    color: var(--text-muted);
     font-size: 0.9rem;
 }
 
@@ -128,18 +126,18 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    color: #d1fae5;
+    color: var(--text-secondary);
 }
 
 .project-item:hover .project-header {
-    background: rgba(255, 255, 255, 0.1);
-    color: #fff;
+    background: var(--glass-bg-hover);
+    color: var(--text-primary);
 }
 
 .project-item.active .project-header {
-    background: rgba(16, 185, 129, 0.2);
-    color: #fff;
-    border: 1px solid rgba(16, 185, 129, 0.3);
+    background: rgba(16, 185, 129, 0.1);
+    color: var(--accent-secondary);
+    border: 1px solid var(--border-glass-light);
 }
 
 .project-info h4 {
@@ -153,19 +151,24 @@
 }
 
 .project-dropdown {
-    color: rgba(255, 255, 255, 0.5);
-    padding: 4px;
+    color: var(--text-muted);
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 4px;
+    transition: background 0.2s ease, color 0.2s ease;
 }
 
 .project-dropdown:hover {
-    color: #fff;
+    color: var(--accent-primary);
 }
 
 .expand-icon {
     transition: transform 0.2s ease;
 }
 
-.project-dropdown.expanded .expand-icon {
+.expand-icon.expanded {
     transform: rotate(90deg);
 }
 
@@ -185,13 +188,13 @@
     display: flex;
     flex-direction: column;
     gap: 4px;
-    border-left: 1px solid rgba(255, 255, 255, 0.1);
+    border-left: 1px solid var(--border-glass-light);
     margin-left: 6px;
 }
 
 .stat {
     font-size: 0.8rem;
-    color: rgba(236, 253, 245, 0.7);
+    color: var(--text-secondary);
     padding: 6px 8px;
     border-radius: 4px;
     display: flex;
@@ -199,12 +202,12 @@
 }
 
 .stat:hover {
-    background: rgba(255, 255, 255, 0.05);
-    color: #fff;
+    background: var(--glass-bg-hover);
+    color: var(--accent-primary);
 }
 
-/* Make logos white */
-.tool-icon-small {
+/* Make logos white in dark mode only */
+:host-context([data-theme='dark']) .tool-icon-small {
     filter: brightness(0) invert(1);
 }
 
@@ -232,6 +235,34 @@
     color: #a7f3d0;
 }
 
+/* Dark Mode Overrides */
+:host-context([data-theme='dark']) .sidebar {
+    background: rgba(2, 6, 23, 0.85);
+    border-right: 1px solid rgba(var(--neon-green-rgb), 0.25);
+    border-top: 1px solid rgba(var(--neon-green-rgb), 0.15);
+}
+
+:host-context([data-theme='dark']) .project-item.active .project-header {
+    background: rgba(var(--neon-green-rgb), 0.08);
+    color: var(--neon-green);
+    border: 1px solid rgba(var(--neon-green-rgb), 0.3);
+    box-shadow: 0 0 15px rgba(var(--neon-green-rgb), 0.1);
+}
+
+:host-context([data-theme='dark']) .project-item:hover .project-header {
+    background: rgba(var(--neon-green-rgb), 0.04);
+    color: #fff;
+}
+
+:host-context([data-theme='dark']) .project-dropdown:hover {
+    color: var(--neon-green);
+}
+
+:host-context([data-theme='dark']) .stat:hover {
+    background: rgba(var(--neon-green-rgb), 0.06);
+    color: var(--neon-green);
+}
+
 /* Responsive */
 @media (max-width: 768px) {
     .sidebar {
@@ -245,10 +276,4 @@
     .sidebar.collapsed {
         width: 100%;
     }
-}
-
-/* Dark Mode Overrides */
-:host-context([data-theme='dark']) .sidebar {
-    background: rgba(2, 6, 23, 0.85);
-    border-right: 1px solid rgba(16, 185, 129, 0.2);
 }

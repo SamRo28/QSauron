@@ -5,7 +5,15 @@
   align-items: center;
   min-height: 100vh;
   padding: 20px;
+  position: relative;
   /* Background handled by global body style */
+}
+
+.back-button-container {
+  position: absolute;
+  top: 2rem;
+  left: 2rem;
+  z-index: 10;
 }
 
 /* Extend Glass Card */

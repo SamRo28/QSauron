@@ -12,16 +12,15 @@
 }
 
 .dashboard-header {
-  background: linear-gradient(135deg, rgba(5, 150, 105, 0.8), rgba(4, 120, 87, 0.85));
-  /* Emerald 600/700 translucent */
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-  color: white;
+  background: var(--glass-header-bg, rgba(255, 255, 255, 0.6));
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid var(--border-glass-light);
+  color: var(--text-primary);
   padding: 16px 0;
   position: relative;
   z-index: 1000;
-  box-shadow: 0 4px 20px rgba(6, 78, 59, 0.15);
+  box-shadow: 0 4px 20px var(--shadow-glass);
 }
 
 .header-content {
@@ -34,14 +33,21 @@
 
 /* Logo Styles */
 .dashboard-logo {
+  transition: filter 0.3s ease;
+}
+
+:host-context([data-theme='dark']) .dashboard-logo {
   filter: brightness(0) invert(1);
 }
 
 .dashboard-header h1 {
   margin: 0;
-  font-weight: 600;
+  font-weight: 700;
   font-size: 1.8rem;
-  color: #ecfdf5;
+  background: linear-gradient(135deg, var(--neon-green) 0%, var(--neon-green-dim) 50%, #34d399 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
   letter-spacing: -0.02em;
 }
 
@@ -55,7 +61,7 @@
 .welcome-text {
   font-size: 0.95rem;
   font-weight: 500;
-  color: rgba(236, 253, 245, 0.8);
+  color: var(--text-secondary);
 }
 
 .user-dropdown-container {
@@ -63,9 +69,9 @@
 }
 
 .user-icon-btn {
-  background: rgba(255, 255, 255, 0.1);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ecfdf5;
+  background: var(--glass-bg);
+  border: 1px solid var(--border-glass-light);
+  color: var(--text-primary);
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -78,8 +84,9 @@
 }
 
 .user-icon-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  border-color: rgba(255, 255, 255, 0.3);
+  background: var(--glass-bg-hover);
+  border-color: var(--accent-primary);
+  color: var(--accent-primary);
   transform: translateY(-1px);
 }
 
@@ -93,19 +100,19 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
+  background: var(--glass-bg-card);
+  backdrop-filter: blur(16px);
+  border: 1px solid var(--border-glass);
+  border-radius: var(--radius-md);
+  box-shadow: var(--card-shadow);
 }
 
-/* Keep dropdown strictly glassmorphic or opaque? 
-   Let's use the provided glass recipe for consistency if we want, 
-   but user didn't explicitly redesign the dropdown inside. 
-   We will keep styles compatible.
-*/
 .dropdown-item {
   width: 100%;
   padding: 10px 12px;
   border: none;
   background: transparent;
-  color: var(--text-primary, #333);
+  color: var(--text-primary);
   text-align: left;
   cursor: pointer;
   border-radius: 8px;
@@ -119,8 +126,7 @@
 
 .dropdown-item:hover {
   background: rgba(16, 185, 129, 0.1);
-  /* Light green hover */
-  color: #065f46;
+  color: var(--accent-primary);
 }
 
 .dropdown-item .icon {
@@ -131,7 +137,7 @@
 
 .dropdown-divider {
   height: 1px;
-  background: rgba(0, 0, 0, 0.1);
+  background: var(--border-glass-light);
   margin: 4px 0;
 }
 
@@ -172,8 +178,7 @@
 .content-header h2 {
   font-size: 2.2rem;
   font-weight: 700;
-  color: #064e3b;
-  /* Verde oscuro fuerte para contraste */
+  color: var(--text-primary);
   margin: 0;
   letter-spacing: -0.02em;
 }
@@ -189,19 +194,19 @@
 /* La Tarjeta "Glassmorphism" Formula Magica */
 .tool-card {
   /* 1. Transparencia: Blanco translúcido */
-  background: rgba(255, 255, 255, 0.25);
+  background: var(--glass-bg-card);
 
   /* 2. El efecto de borrosidad */
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
   /* 3. Borde sutil */
-  border: 1px solid rgba(255, 255, 255, 0.5);
-  border-top: 1px solid rgba(255, 255, 255, 0.8);
+  border: 1px solid var(--border-glass);
+  border-top: 1px solid var(--border-glass-light);
   /* Luz cenital */
 
   /* 4. Sombra suave para separar del fondo */
-  box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.07);
+  box-shadow: var(--card-shadow);
 
   /* 5. Forma */
   border-radius: 20px;
@@ -211,15 +216,15 @@
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  /* Alineado izq o centro según preferencia, user dijo "parte superior central (o izquierda)" */
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%;
 }
 
 .tool-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 12px 40px 0 rgba(31, 38, 135, 0.12);
-  background: rgba(255, 255, 255, 0.35);
+  box-shadow: var(--card-shadow-hover);
+  background: var(--glass-bg-hover);
+  border-color: var(--accent-primary);
 }
 
 .card-icon-container {
@@ -227,25 +232,24 @@
   height: 64px;
   border-radius: 50%;
   background: rgba(16, 185, 129, 0.1);
-  /* Verde suave */
   display: flex;
   align-items: center;
   justify-content: center;
   margin-bottom: 24px;
-  color: #059669;
+  color: var(--accent-primary);
 }
 
 .tool-title {
   font-size: 1.5rem;
   font-weight: 700;
-  color: #064e3b;
+  color: var(--text-primary);
   margin: 0 0 4px 0;
   letter-spacing: -0.03em;
 }
 
 .tool-subtitle {
   font-size: 0.9rem;
-  color: #059669;
+  color: var(--accent-primary);
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
@@ -253,20 +257,16 @@
 }
 
 .tool-description {
-  color: #374151;
-  /* Gris oscuro pero no negro */
+  color: var(--text-secondary);
   font-size: 0.95rem;
   line-height: 1.6;
-  /* Interlineado aumentado */
   font-weight: 400;
   margin: 0 0 32px 0;
   flex-grow: 1;
-  /* Empujar botón hacia abajo */
 }
 
 .btn-card-action {
-  background: #059669;
-  /* Verde corporativo */
+  background: var(--accent-primary);
   color: white;
   border: none;
   padding: 12px 24px;
@@ -281,7 +281,7 @@
 }
 
 .btn-card-action:hover {
-  background: #047857;
+  background: var(--accent-secondary);
   transform: translateY(-1px);
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
 }
@@ -325,21 +325,33 @@
 /* Dark Mode Overrides */
 :host-context([data-theme='dark']) .dashboard-container {
   background:
-    radial-gradient(circle at 15% 25%, rgba(16, 185, 129, 0.05) 0%, transparent 25%),
-    radial-gradient(circle at 85% 75%, rgba(6, 78, 59, 0.05) 0%, transparent 30%),
+    radial-gradient(circle at 15% 25%, rgba(var(--neon-green-rgb), 0.08) 0%, transparent 35%),
+    radial-gradient(circle at 85% 75%, rgba(6, 78, 59, 0.2) 0%, transparent 40%),
     linear-gradient(180deg, #020617 0%, #0f172a 100%);
+}
+
+:host-context([data-theme='dark']) .dashboard-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  background-image:
+    linear-gradient(var(--grid-color) 1px, transparent 1px),
+    linear-gradient(90deg, var(--grid-color) 1px, transparent 1px);
+  background-size: 80px 80px;
+  opacity: 0.7;
+  pointer-events: none;
 }
 
 :host-context([data-theme='dark']) .dashboard-header {
   background: rgba(2, 6, 23, 0.85);
-  border-bottom: 1px solid rgba(16, 185, 129, 0.2);
+  border-bottom: 1px solid rgba(var(--neon-green-rgb), 0.2);
+  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.4);
 }
 
 :host-context([data-theme='dark']) .dashboard-header h1 {
   color: #e2e8f0;
 }
-
-
 
 :host-context([data-theme='dark']) .content-header h2 {
   color: #e2e8f0;
@@ -347,15 +359,15 @@
 
 :host-context([data-theme='dark']) .tool-card {
   background: rgba(2, 6, 23, 0.6);
-  border: 1px solid rgba(16, 185, 129, 0.2);
-  border-top: 1px solid rgba(16, 185, 129, 0.3);
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+  border: 1px solid rgba(var(--neon-green-rgb), 0.15);
+  border-top: 1px solid rgba(var(--neon-green-rgb), 0.25);
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.4);
 }
 
 :host-context([data-theme='dark']) .tool-card:hover {
-  background: rgba(15, 23, 42, 0.8);
-  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.5);
-  border-color: rgba(16, 185, 129, 0.5);
+  background: rgba(15, 23, 42, 0.85);
+  box-shadow: 0 12px 40px 0 rgba(0, 0, 0, 0.6), var(--neon-glow);
+  border-color: var(--neon-green);
 }
 
 :host-context([data-theme='dark']) .tool-title {
@@ -367,19 +379,21 @@
 }
 
 :host-context([data-theme='dark']) .card-icon-container {
-  background: rgba(16, 185, 129, 0.1);
-  color: #34d399;
+  background: rgba(var(--neon-green-rgb), 0.08);
+  color: var(--neon-green);
+  border: 1px solid rgba(var(--neon-green-rgb), 0.15);
 }
 
 :host-context([data-theme='dark']) .btn-card-action {
-  background: rgba(16, 185, 129, 0.15);
-  border: 1px solid rgba(16, 185, 129, 0.3);
-  color: #34d399;
+  background: rgba(var(--neon-green-rgb), 0.1);
+  border: 1px solid rgba(var(--neon-green-rgb), 0.3);
+  color: var(--neon-green);
 }
 
 :host-context([data-theme='dark']) .btn-card-action:hover {
-  background: rgba(16, 185, 129, 0.25);
-  color: #6ee7b7;
+  background: rgba(var(--neon-green-rgb), 0.2);
+  color: #fff;
+  box-shadow: var(--neon-glow);
 }
 
 :host-context([data-theme='dark']) .dropdown-item {
@@ -387,13 +401,14 @@
 }
 
 :host-context([data-theme='dark']) .dropdown-item:hover {
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
+  background: rgba(var(--neon-green-rgb), 0.1);
+  color: var(--neon-green);
 }
 
 :host-context([data-theme='dark']) .dropdown-menu {
-  background: rgba(2, 6, 23, 0.9);
-  border: 1px solid rgba(16, 185, 129, 0.2);
+  background: rgba(2, 6, 23, 0.95);
+  border: 1px solid rgba(var(--neon-green-rgb), 0.25);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5), var(--neon-glow);
 }
 
 :host-context([data-theme='dark']) .card-icon-container img {

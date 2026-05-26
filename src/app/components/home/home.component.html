@@ -1,138 +1,152 @@
-<div class="home-container">
-    <!-- 1. Header -->
-    <header class="glass-header">
-        <div class="logo-section">
-            <div class="logo-icon">
-                <img src="assets/logo.svg" alt="QSauron Logo" width="32" height="32">
+<div class="landing-page">
+    <!-- Parallax Quantum Grid Background -->
+    <div class="quantum-grid" [style.transform]="'translateY(' + gridOffsetY + 'px)'"></div>
+
+    <!-- ============================================ -->
+    <!-- HEADER (Glass, integrated with scroll)       -->
+    <!-- ============================================ -->
+    <header class="glass-header"
+        [class.header-hidden]="!headerVisible"
+        [class.header-compact]="headerCompact">
+        <div class="header-inner">
+            <div class="logo-section">
+                <div class="logo-icon">
+                    <img src="assets/logo.svg" alt="QSauron Logo" width="28" height="28">
+                </div>
+                <span class="logo-text">QSauron</span>
             </div>
-            <span class="logo-text">QSauron</span>
-        </div>
 
-        <nav class="nav-links">
-            <a [href]="env.quCoUrl" class="nav-link">QuCo</a>
-            <a [href]="env.quTeUrl" class="nav-link">QuTe</a>
-            <a [href]="env.quMuUrl" class="nav-link">QuMu</a>
-            <a [href]="env.quaCoUrl" class="nav-link">QuaCo</a>
-        </nav>
+            <nav class="nav-links">
+                <a [href]="env.quCoUrl" class="nav-link"
+                    (mouseenter)="onNodeHover('QuCo')"
+                    (mouseleave)="onNodeHover(null)">QuCo</a>
+                <a [href]="env.quTeUrl" class="nav-link"
+                    (mouseenter)="onNodeHover('QuTe')"
+                    (mouseleave)="onNodeHover(null)">QuTe</a>
+                <a [href]="env.quMuUrl" class="nav-link"
+                    (mouseenter)="onNodeHover('QuMu')"
+                    (mouseleave)="onNodeHover(null)">QuMu</a>
+                <a [href]="env.quaCoUrl" class="nav-link"
+                    (mouseenter)="onNodeHover('QuaCo')"
+                    (mouseleave)="onNodeHover(null)">QuaCo</a>
+            </nav>
 
-        <div class="cta-section" style="display: flex; gap: 1rem;">
-            <a (click)="checkSession()" class="glass-btn glass-btn-secondary glass-btn-sm" style="cursor: pointer;">Log
-                In</a>
-            <a routerLink="/register" class="glass-btn glass-btn-sm">Sign Up</a>
+            <div class="cta-section">
+                <a (click)="checkSession()" class="glass-btn glass-btn-secondary glass-btn-sm header-btn">Log In</a>
+                <a routerLink="/register" class="glass-btn glass-btn-sm header-btn">Sign Up</a>
+            </div>
         </div>
     </header>
 
-    <!-- 2. Hero Section -->
-    <section class="hero-section">
-        <div class="hero-content">
-            <h1 class="hero-title">Master the Quantum Development Life Cycle.</h1>
+    <!-- ============================================ -->
+    <!-- HERO SECTION: "The Quantum Core"             -->
+    <!-- ============================================ -->
+    <section class="hero-section" #heroSection>
+        <!-- Bloch Sphere 3D -->
+        <div class="sphere-container"
+            [style.--sphere-offset]="sphereOffset">
+            <app-bloch-sphere
+                [scrollProgress]="scrollProgress"
+                [activePhase]="activePhase"
+                [hoveredNode]="hoveredNode">
+            </app-bloch-sphere>
+        </div>
+
+        <!-- Hero Text Content -->
+        <div class="hero-content" [class.hero-content-fade]="sphereOffset > 0.3">
+
+
+            <h1 class="hero-title">
+                Master the<br>
+                <span class="title-gradient">Quantum Core.</span>
+            </h1>
+
             <p class="hero-subtitle">
-                "QSauron unifies the workflow: Generates optimized code with QuCo, ensures quality with test cases in
-                QuTe,
-                and validates the robustness of your tests through circuit mutation with QuMu."
+                QSauron unifies the workflow: Generate optimized code, ensure quality with
+                test cases, and validate robustness through circuit mutation.
             </p>
 
-            <!-- Integrated Pipeline Diagram -->
-            <div class="pipeline-integration">
-                <!-- Curved Energy Line SVG -->
-                <svg class="connection-line" width="900" height="200" viewBox="0 0 900 200" fill="none"
-                    xmlns="http://www.w3.org/2000/svg">
-                    <!-- Path that curves through the card positions (Centers: 150, 450, 750) -->
-                    <path d="M150 100 C 250 60, 350 140, 450 100 S 650 60, 750 100" stroke="url(#gradient-line)"
-                        stroke-width="3" fill="none" class="energy-path" />
-
-                    <defs>
-                        <linearGradient id="gradient-line" x1="0%" y1="0%" x2="100%" y2="0%">
-                            <stop offset="0%" stop-color="var(--accent-primary)" stop-opacity="0.2" />
-                            <stop offset="50%" stop-color="var(--accent-primary)" stop-opacity="1" />
-                            <stop offset="100%" stop-color="var(--accent-primary)" stop-opacity="0.2" />
-                        </linearGradient>
-                    </defs>
-                </svg>
-
-                <!-- Card Container Overlay -->
-                <div class="cards-overlay">
-                    <!-- Card 1: QuCo -->
-                    <a [href]="env.quCoUrl" class="hero-card glass-card" style="animation-delay: 0s;">
-                        <div class="card-icon-sm">
-                            <svg viewBox="0 0 400 400" width="32" height="32" xmlns="http://www.w3.org/2000/svg">
-                                <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="var(--accent-primary)"
-                                    stroke-width="8" />
-                                <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="var(--accent-primary)"
-                                    stroke-width="8" transform="rotate(60 200 200)" />
-                                <ellipse cx="200" cy="200" rx="150" ry="75" fill="none" stroke="var(--accent-primary)"
-                                    stroke-width="8" transform="rotate(-60 200 200)" />
-                                <circle cx="200" cy="125" r="14" fill="white" stroke="var(--accent-primary)"
-                                    stroke-width="6" />
-                                <circle cx="335" cy="240" r="14" fill="white" stroke="var(--accent-primary)"
-                                    stroke-width="6" />
-                                <circle cx="65" cy="240" r="14" fill="white" stroke="var(--accent-primary)"
-                                    stroke-width="6" />
-                                <circle cx="200" cy="200" r="55" fill="none" stroke="var(--accent-primary)"
-                                    stroke-width="8" />
-                                <text x="200" y="215" text-anchor="middle" font-size="42"
-                                    font-family="Arial, Helvetica, sans-serif" font-weight="bold"
-                                    fill="var(--accent-primary)">
-                                    Q / Ɔ
-                                </text>
-                            </svg>
-                        </div>
-                        <h4>QuCo</h4>
-                        <span class="step-badge">GENERATE</span>
-                    </a>
-
-                    <!-- Card 2: QuTe -->
-                    <a [href]="env.quTeUrl" class="hero-card glass-card" style="animation-delay: 1.5s;">
-                        <div class="card-icon-sm">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path d="M8 12L11 15L16 9" stroke="var(--accent-primary)" stroke-width="2"
-                                    stroke-linecap="round" stroke-linejoin="round" />
-                                <circle cx="12" cy="12" r="8" stroke="var(--accent-primary)" stroke-width="1.5"
-                                    stroke-dasharray="2 3" opacity="0.4" />
-                                <circle cx="5" cy="5" r="1.5" fill="var(--accent-primary)" />
-                                <circle cx="19" cy="5" r="1.5" fill="var(--accent-primary)" />
-                                <circle cx="5" cy="19" r="1.5" fill="var(--accent-primary)" />
-                                <circle cx="19" cy="19" r="1.5" fill="var(--accent-primary)" />
-                            </svg>
-                        </div>
-                        <h4>QuTe</h4>
-                        <span class="step-badge">TEST</span>
-                    </a>
-
-                    <!-- Card 3: QuMu -->
-                    <a [href]="env.quMuUrl" class="hero-card glass-card" style="animation-delay: 3s;">
-                        <div class="card-icon-sm">
-                            <svg width="32" height="32" viewBox="0 0 24 24" fill="none"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <circle cx="12" cy="12" r="3" stroke="var(--accent-primary)" stroke-width="2" />
-                                <path d="M12 2v4M12 18v4M22 12h-4M6 12H2" stroke="var(--accent-primary)"
-                                    stroke-width="2" stroke-linecap="round" />
-                                <circle cx="12" cy="12" r="8" stroke="var(--accent-primary)" stroke-width="1.5"
-                                    stroke-dasharray="2 3" opacity="0.4" />
-                                <circle cx="5" cy="5" r="1.5" fill="var(--accent-primary)" />
-                                <circle cx="19" cy="5" r="1.5" fill="var(--accent-primary)" />
-                                <circle cx="5" cy="19" r="1.5" fill="var(--accent-primary)" />
-                                <circle cx="19" cy="19" r="1.5" fill="var(--accent-primary)" />
-                            </svg>
-                        </div>
-                        <h4>QuMu</h4>
-                        <span class="step-badge">MUTATE</span>
-                    </a>
-                </div>
+            <!-- Orbiting Node Labels (overlay for hover detection) -->
+            <div class="node-labels">
+                <span class="node-label"
+                    *ngFor="let section of sections; let i = index"
+                    (mouseenter)="onNodeHover(section.title)"
+                    (mouseleave)="onNodeHover(null)"
+                    [class.node-active]="hoveredNode === section.title">
+                    {{ section.title }}
+                </span>
             </div>
 
-            <a (click)="checkSession()" class="glass-btn glass-btn-lg animate-fade-in-up" style="cursor: pointer;">Start
-                Workflow</a>
+            <!-- Magnetic CTA Button -->
+            <div class="magnetic-wrapper"
+                (mousemove)="onMagneticMove($event)"
+                (mouseleave)="onMagneticLeave()">
+                <a (click)="checkSession()"
+                    #magneticBtn
+                    class="glass-btn glass-btn-cta"
+                    [style.transform]="'translate(' + magneticX + 'px, ' + magneticY + 'px)'"
+                    id="hero-start-workflow">
+                    <span class="btn-glow"></span>
+                    <span class="btn-text">Start Workflow</span>
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+            </div>
 
-            <!-- Extra Tools Section -->
-            <div class="extra-tools" style="margin-top: 3rem; width: 100%; display: flex; justify-content: center;">
-                <a [href]="env.quaCoUrl" class="hero-card glass-card" style="width: 280px; text-decoration: none;">
-                    <div class="card-icon-sm">
-                        <img src="assets/QuaCo-icon.svg" alt="QuaCo Logo" width="32" height="32">
-                    </div>
-                    <h4>QuaCo</h4>
-                    <span class="step-badge" style="font-size: 0.6rem; text-align: center;">Quantum Annealing</span>
+            <!-- Scroll Indicator -->
+            <div class="scroll-hint">
+                <div class="scroll-mouse">
+                    <div class="scroll-wheel"></div>
+                </div>
+                <span class="scroll-text">Scroll to explore</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- ============================================ -->
+    <!-- SCROLL STORYTELLING: "The Descent of Sauron" -->
+    <!-- ============================================ -->
+    <section class="storytelling-section">
+
+        <!-- Content Cards (right side) -->
+        <div class="story-cards">
+            <div class="story-card glass-card-story"
+                *ngFor="let section of sections; let i = index"
+                [class.story-card-active]="activeSectionIndex === i"
+                [class.story-card-visible]="isSectionVisible(i)"
+                [id]="'section-' + section.id">
+
+                <div class="card-eyebrow-story">{{ section.eyebrow }}</div>
+                <h2 class="card-title-story">{{ section.title }}</h2>
+                <div class="card-gradient-line"></div>
+                <p class="card-description-story">{{ section.body }}</p>
+
+                <div class="card-step-counter">
+                    <span class="step-current">{{ (i + 1).toString().padStart(2, '0') }}</span>
+                    <div class="step-line"></div>
+                    <span class="step-total">04</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Final CTA -->
+    <section class="final-cta-section">
+        <div class="final-cta-content">
+            <h2 class="final-cta-title">Ready to enter the <span class="title-gradient">Quantum Core</span>?</h2>
+            <p class="final-cta-subtitle">Start your quantum development journey today.</p>
+            <div class="final-cta-buttons">
+                <a (click)="checkSession()" class="glass-btn glass-btn-cta" id="final-start-workflow">
+                    <span class="btn-text">Launch QSauron</span>
+                    <svg class="btn-arrow" width="20" height="20" viewBox="0 0 24 24" fill="none">
+                        <path d="M5 12h14M12 5l7 7-7 7" stroke="currentColor" stroke-width="2"
+                            stroke-linecap="round" stroke-linejoin="round"/>
+                    </svg>
+                </a>
+                <a routerLink="/register" class="glass-btn glass-btn-secondary glass-btn-lg-outline">
+                    Create Account
                 </a>
             </div>
         </div>
