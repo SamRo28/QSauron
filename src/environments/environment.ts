@@ -5,5 +5,6 @@ export const environment = {
     quTeUrl: 'https://alarcosj.esi.uclm.es/qute',
     quaCoUrl: 'https://alarcosj.esi.uclm.es/quaco',
 
-    apiUrl: 'http://localhost:8080'
+    apiUrl: 'http://localhost:8080',
+    converterUrl: 'http://localhost:3000'
 };

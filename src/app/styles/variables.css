@@ -19,12 +19,12 @@
   --text-muted: #718096;
 
   /* Accent Colors (Emerald) */
-  --accent-primary: #10b981;
-  /* Emerald 500 */
-  --accent-secondary: #059669;
+  --accent-primary: #059669;
   /* Emerald 600 */
-  --accent-tertiary: #34d399;
-  /* Emerald 400 */
+  --accent-secondary: #047857;
+  /* Emerald 700 */
+  --accent-tertiary: #10b981;
+  /* Emerald 500 */
   --accent-gradient: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
 
   /* Borders & Shadows */

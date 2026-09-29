@@ -10,6 +10,12 @@ export interface User {
     projects?: Project[];
 }
 
+export interface CurrentUserProfile {
+    email: string;
+    role: 'ADMINISTRADOR' | 'USUARIO' | string;
+    isAdmin: boolean;
+}
+
 export interface Project {
     id: string;
     name: string;

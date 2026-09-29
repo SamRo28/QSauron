@@ -14,6 +14,7 @@ import { SideBarComponent } from '../side-bar/side-bar.component';
 })
 export class DashboardComponent implements OnInit {
   currentUser: string | null = null;
+  isAdmin: boolean = false;
   showUserMenu: boolean = false;
 
   @ViewChild('dropdownContainer') dropdownContainer!: ElementRef;
@@ -47,6 +48,10 @@ export class DashboardComponent implements OnInit {
     this.authService.currentUser$.subscribe(user => {
       this.currentUser = user;
     });
+
+    this.authService.isAdmin$.subscribe(admin => {
+      this.isAdmin = admin;
+    });
   }
 
   logout() {
@@ -59,5 +64,10 @@ export class DashboardComponent implements OnInit {
 
   toggleTheme() {
     this.themeService.toggleTheme();
+  }
+
+  navigateToConverter() {
+    this.showUserMenu = false;
+    this.router.navigate(['/dashboard/converter']);
   }
 }

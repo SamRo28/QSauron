@@ -1,279 +1,365 @@
+/* Sidebar Component - Glassmorphism Refined from QuMu */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
 :host {
-    display: contents;
+  display: contents;
 }
 
-/* Sidebar - Glassmorphism Quantum */
 .sidebar {
-    width: 280px;
-    background: var(--glass-bg-sidebar);
-    backdrop-filter: blur(16px) saturate(180%);
-    -webkit-backdrop-filter: blur(16px) saturate(180%);
-    border-right: 1px solid var(--border-glass-light);
-    border-top: 1px solid var(--border-glass-light);
-    overflow-y: auto;
-    transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    z-index: 900;
-    box-shadow: 4px 0 24px var(--shadow-glass);
+  width: 280px;
+  height: 100vh;
+  position: sticky;
+  top: 0;
+  flex-shrink: 0;
+  /* Green Theme Gradient (Restored from QuMu) */
+  background: linear-gradient(180deg, rgba(6, 95, 70, 0.85) 0%, rgba(6, 78, 59, 0.9) 100%);
+  backdrop-filter: blur(12px) saturate(180%);
+  -webkit-backdrop-filter: blur(12px) saturate(180%);
+  border-right: 1px solid rgba(52, 211, 153, 0.3);
+  box-shadow: 4px 0 24px rgba(6, 78, 59, 0.25);
+  transition: width 300ms cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease, border-color 0.3s ease;
+  z-index: 1000;
+  overflow: hidden;
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  color: #ecfdf5;
+  display: flex;
+  flex-direction: column;
 }
 
 .sidebar.collapsed {
-    width: 70px;
+  width: 70px;
 }
 
+/* Unified Sidebar Header aligned with Dashboard Header */
 .sidebar-header {
-    padding: 24px 20px;
-    border-bottom: 1px solid var(--border-glass-light);
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+  height: 72px; /* Aligned with dashboard header */
+  padding: 0 20px;
+  border-bottom: 1px solid rgba(52, 211, 153, 0.2);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-shrink: 0;
 }
 
 .sidebar.collapsed .sidebar-header {
-    padding: 24px 10px;
-    justify-content: center;
+  justify-content: center;
+  padding: 0 10px;
 }
 
 .sidebar-header h3 {
-    margin: 0;
-    font-size: 1.1rem;
-    font-weight: 600;
-    color: var(--text-primary);
-    letter-spacing: 0.02em;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ecfdf5;
+  margin: 0;
+  white-space: nowrap;
 }
 
 .sidebar-controls {
-    display: flex;
-    gap: 8px;
-    align-items: center;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
 }
 
+.sidebar.collapsed .sidebar-controls {
+  width: 100%;
+  justify-content: center;
+}
+
+/* Buttons - Glassmorphism style from QuMu */
 .btn-refresh-small,
 .btn-toggle-sidebar {
-    background: var(--glass-bg);
-    border: 1px solid var(--border-glass-light);
-    color: var(--text-secondary);
-    cursor: pointer;
-    padding: 6px;
-    border-radius: 6px;
-    transition: all 0.2s ease;
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.2);
+  color: #d1fae5;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 300ms cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .btn-refresh-small:hover,
 .btn-toggle-sidebar:hover {
-    background-color: var(--glass-bg-hover);
-    color: var(--accent-primary);
-    border-color: var(--accent-primary);
+  background: rgba(0, 0, 0, 0.3);
+  color: #fff;
+  box-shadow: 0 0 12px rgba(52, 211, 153, 0.3);
+  border-color: rgba(52, 211, 153, 0.4);
+}
+
+.btn-refresh-small:active,
+.btn-toggle-sidebar:active {
+  transform: scale(0.95);
 }
 
 .sidebar-content {
-    padding: 16px 0;
+  padding: 16px 0;
+  flex: 1;
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 0;
 }
 
+/* Loading & Error States */
 .sidebar-loading,
 .sidebar-error {
-    padding: 20px;
-    text-align: center;
-    color: var(--text-secondary);
+  padding: 20px;
+  text-align: center;
+  color: #d1fae5;
 }
 
 .loading-spinner-small {
-    width: 20px;
-    height: 20px;
-    border: 2px solid var(--border-glass-light);
-    border-top: 2px solid var(--accent-primary);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin: 0 auto 10px;
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255, 255, 255, 0.15);
+  border-top: 2px solid #10b981;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 10px;
 }
 
 .sidebar-error .error-text {
-    color: #ef4444;
-    font-size: 0.85rem;
-    margin-bottom: 10px;
+  color: #fca5a5;
+  font-size: 0.85rem;
+  margin-bottom: 10px;
 }
 
 .btn-retry-small {
-    background: var(--accent-primary);
-    color: white;
-    border: none;
-    padding: 6px 12px;
-    border-radius: 4px;
-    font-size: 0.8rem;
-    cursor: pointer;
+  background: var(--accent-gradient, linear-gradient(135deg, #10b981 0%, #059669 100%));
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 200ms;
+}
+
+.btn-retry-small:hover {
+  filter: brightness(1.1);
+  transform: translateY(-1px);
 }
 
 .no-projects-sidebar {
-    padding: 20px;
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.9rem;
+  padding: 20px;
+  text-align: center;
+  color: rgba(236, 253, 245, 0.5);
+  font-size: 0.9rem;
 }
 
 .projects-list {
-    padding: 0 10px;
+  padding: 0 10px;
 }
 
 .project-item {
-    margin-bottom: 4px;
+  margin-bottom: 4px;
 }
 
+/* Project Header node style matching QuMu tree-node */
 .project-header {
-    padding: 12px;
-    border-radius: 8px;
-    transition: all 0.2s ease;
-    background: transparent;
-    cursor: pointer;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    color: var(--text-secondary);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 12px;
+  cursor: pointer;
+  transition: all 200ms;
+  border-radius: 8px;
+  min-height: 36px;
+  color: #d1fae5;
 }
 
 .project-item:hover .project-header {
-    background: var(--glass-bg-hover);
-    color: var(--text-primary);
+  background: rgba(255, 255, 255, 0.05);
+  color: #10b981;
 }
 
+/* Selected project styling from QuMu */
 .project-item.active .project-header {
-    background: rgba(16, 185, 129, 0.1);
-    color: var(--accent-secondary);
-    border: 1px solid var(--border-glass-light);
+  background: rgba(6, 78, 59, 0.6);
+  border-left: 3px solid #10b981;
+  padding-left: 9px; /* Adjusting for border */
+  box-shadow: 0 0 15px rgba(6, 78, 59, 0.4);
+  color: #10b981;
+  font-weight: 600;
 }
 
 .project-info h4 {
-    margin: 0;
-    font-family: 'Inter', sans-serif;
-    font-size: 0.9rem;
-    font-weight: 500;
-    display: flex;
-    align-items: center;
-    gap: 10px;
+  margin: 0;
+  font-size: 0.875rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 10px;
 }
 
 .project-dropdown {
-    color: var(--text-muted);
-    padding: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 4px;
-    transition: background 0.2s ease, color 0.2s ease;
+  color: rgba(255, 255, 255, 0.5);
+  padding: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  transition: background 0.2s ease, color 0.2s ease;
 }
 
 .project-dropdown:hover {
-    color: var(--accent-primary);
+  color: #10b981;
 }
 
 .expand-icon {
-    transition: transform 0.2s ease;
+  transition: transform 200ms;
 }
 
 .expand-icon.expanded {
-    transform: rotate(90deg);
+  transform: rotate(90deg);
 }
 
 .project-details {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.3s ease;
-    padding-left: 12px;
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+  padding-left: 12px;
 }
 
 .project-details.expanded {
-    max-height: 300px;
+  max-height: 300px;
 }
 
+/* Project Sub-items matching QuMu tree-sublist */
 .project-stats {
-    padding: 8px 0 8px 12px;
-    display: flex;
-    flex-direction: column;
-    gap: 4px;
-    border-left: 1px solid var(--border-glass-light);
-    margin-left: 6px;
+  padding: 8px 0 8px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  border-left: 1px solid rgba(52, 211, 153, 0.2);
+  margin-left: 6px;
 }
 
 .stat {
-    font-size: 0.8rem;
-    color: var(--text-secondary);
-    padding: 6px 8px;
-    border-radius: 4px;
-    display: flex;
-    align-items: center;
+  font-size: 0.8rem;
+  color: #d1fae5;
+  padding: 6px 8px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  transition: all 200ms;
 }
 
 .stat:hover {
-    background: var(--glass-bg-hover);
-    color: var(--accent-primary);
+  background: rgba(255, 255, 255, 0.05);
+  color: #10b981;
 }
 
-/* Make logos white in dark mode only */
-:host-context([data-theme='dark']) .tool-icon-small {
-    filter: brightness(0) invert(1);
+/* Tool icons brightness */
+.tool-icon-small {
+  filter: brightness(0) invert(1);
+  opacity: 0.9;
 }
 
 /* Animations */
 @keyframes spin {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    100% {
-        transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-/* Icons Colors - Sidebar specific overrides */
+/* Icon overrides matching QuMu tree-node icon colors (Always bright for visibility) */
 .project-icon {
-    color: #34d399;
+  color: #34d399 !important;
 }
 
 .circuit-icon {
-    color: #6ee7b7;
+  color: #6ee7b7 !important;
 }
 
 .mutant-icon {
-    color: #a7f3d0;
+  color: #a7f3d0 !important;
 }
 
-/* Dark Mode Overrides */
+
+
+/* Dark theme overrides - Keep QuMu green style consistency */
 :host-context([data-theme='dark']) .sidebar {
-    background: rgba(2, 6, 23, 0.85);
-    border-right: 1px solid rgba(var(--neon-green-rgb), 0.25);
-    border-top: 1px solid rgba(var(--neon-green-rgb), 0.15);
+  background: linear-gradient(180deg, rgba(4, 47, 35, 0.9) 0%, rgba(2, 43, 32, 0.95) 100%);
+  border-right: 1px solid rgba(52, 211, 153, 0.2);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
 }
 
-:host-context([data-theme='dark']) .project-item.active .project-header {
-    background: rgba(var(--neon-green-rgb), 0.08);
-    color: var(--neon-green);
-    border: 1px solid rgba(var(--neon-green-rgb), 0.3);
-    box-shadow: 0 0 15px rgba(var(--neon-green-rgb), 0.1);
+/* Custom Emerald Glassmorphism Scrollbar matching Sidebar Style */
+.sidebar,
+.sidebar-content {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(52, 211, 153, 0.35) transparent;
 }
 
-:host-context([data-theme='dark']) .project-item:hover .project-header {
-    background: rgba(var(--neon-green-rgb), 0.04);
-    color: #fff;
+.sidebar::-webkit-scrollbar,
+.sidebar-content::-webkit-scrollbar {
+  width: 6px;
 }
 
-:host-context([data-theme='dark']) .project-dropdown:hover {
-    color: var(--neon-green);
+.sidebar::-webkit-scrollbar-track,
+.sidebar-content::-webkit-scrollbar-track {
+  background: transparent;
 }
 
-:host-context([data-theme='dark']) .stat:hover {
-    background: rgba(var(--neon-green-rgb), 0.06);
-    color: var(--neon-green);
+.sidebar::-webkit-scrollbar-thumb,
+.sidebar-content::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.3);
+  border-radius: 999px;
+  border: 1px solid rgba(52, 211, 153, 0.15);
+  transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.sidebar::-webkit-scrollbar-thumb:hover,
+.sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.55);
+  border-color: rgba(52, 211, 153, 0.35);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.3);
+}
+
+.sidebar::-webkit-scrollbar-thumb:active,
+.sidebar-content::-webkit-scrollbar-thumb:active {
+  background: #10b981;
+}
+
+:host-context([data-theme='dark']) .sidebar,
+:host-context([data-theme='dark']) .sidebar-content {
+  scrollbar-color: rgba(52, 211, 153, 0.25) transparent;
+}
+
+:host-context([data-theme='dark']) .sidebar::-webkit-scrollbar-thumb,
+:host-context([data-theme='dark']) .sidebar-content::-webkit-scrollbar-thumb {
+  background: rgba(52, 211, 153, 0.22);
+  border: 1px solid rgba(52, 211, 153, 0.12);
+}
+
+:host-context([data-theme='dark']) .sidebar::-webkit-scrollbar-thumb:hover,
+:host-context([data-theme='dark']) .sidebar-content::-webkit-scrollbar-thumb:hover {
+  background: rgba(52, 211, 153, 0.5);
+  border-color: rgba(52, 211, 153, 0.35);
+  box-shadow: 0 0 8px rgba(52, 211, 153, 0.25);
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-    .sidebar {
-        width: 100%;
-        height: auto;
-        max-height: 300px;
-        border-right: none;
-        border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-    }
+  .sidebar {
+    position: static;
+    width: 100%;
+    height: auto;
+    max-height: 300px;
+    border-right: none;
+    border-bottom: 1px solid rgba(52, 211, 153, 0.2);
+  }
 
-    .sidebar.collapsed {
-        width: 100%;
-    }
+  .sidebar.collapsed {
+    width: 100%;
+  }
 }

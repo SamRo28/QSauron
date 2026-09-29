@@ -5,5 +5,6 @@ export const environment = {
     quTeUrl: 'https://alarcosj.esi.uclm.es/qute',
     quaCoUrl: 'https://alarcosj.esi.uclm.es/quaco',
 
-    apiUrl: 'https://alarcosj.esi.uclm.es/qsauronback'
+    apiUrl: 'https://alarcosj.esi.uclm.es/qsauronback',
+    converterUrl: 'https://alarcosj.esi.uclm.es/qconvert'
 };

@@ -1,0 +1,278 @@
+<div class="converter-container">
+  <!-- Header -->
+  <div class="converter-header glass-card">
+    <div class="header-info">
+      <div class="header-title-row">
+        <div class="header-icon-badge">
+          <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="16 18 22 12 16 6"></polyline>
+            <polyline points="8 6 2 12 8 18"></polyline>
+          </svg>
+        </div>
+        <div>
+          <div class="title-with-badge">
+            <h2>Traductor de Circuitos Cuánticos</h2>
+            <div class="api-badge" [class.connected]="apiConnected === true" [class.disconnected]="apiConnected === false" [title]="apiConnected === true ? 'Microservicio q-convert-api conectado y listo' : 'No se pudo conectar con q-convert-api en el puerto 3000'">
+              <span class="status-dot"></span>
+              <span>{{ apiConnected === true ? 'API Conectada' : (apiConnected === false ? 'API Desconectada' : 'Verificando API...') }}</span>
+            </div>
+          </div>
+          <p class="header-desc">
+            Microservicio externo <strong>q-convert-api</strong>: traduce circuitos entre OpenQASM, Quirk, Qiskit, Quil, Cirq, Braket, Q#, CUDA-Q, SVG y Jupyter Notebooks.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="header-actions">
+      <button class="glass-btn-secondary btn-sample" (click)="loadSampleCode(selectedSource)" title="Cargar circuito de ejemplo para el formato seleccionado">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+          <polyline points="7 10 12 15 17 10"></polyline>
+          <line x1="12" y1="15" x2="12" y2="3"></line>
+        </svg>
+        Cargar Ejemplo
+      </button>
+
+      <button *ngIf="apiConnected === false" class="glass-btn-secondary btn-retry" (click)="checkHealth(); loadCatalogFromApi()" title="Reintentar conexión con q-convert-api">
+        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <polyline points="23 4 23 10 17 10"></polyline>
+          <path d="M20.49 15a9 9 0 1 1-2.12-9.36L23 10"></path>
+        </svg>
+        Reconectar
+      </button>
+    </div>
+  </div>
+
+  <!-- Panel de Selección de Formatos -->
+  <div class="formats-panel glass-card">
+    <div class="formats-selectors">
+      <!-- Selector Origen -->
+      <div class="selector-group">
+        <label for="source-select" class="selector-label">
+          <span class="step-num">1</span> Formato de Entrada
+        </label>
+        <div class="select-wrapper">
+          <select id="source-select" [ngModel]="selectedSource" (ngModelChange)="onSourceChange($event)">
+            <option *ngFor="let s of sourceFormats" [value]="s.id">
+              {{ s.name }} ({{ s.extension }}) {{ s.isBridged ? '★ Puente' : '' }}
+            </option>
+          </select>
+        </div>
+        <span class="format-hint">{{ getFormatDescription(selectedSource, true) }}</span>
+      </div>
+
+      <!-- Icono de conversión -->
+      <div class="conversion-arrow">
+        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
+          stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <line x1="5" y1="12" x2="19" y2="12"></line>
+          <polyline points="12 5 19 12 12 19"></polyline>
+        </svg>
+      </div>
+
+      <!-- Selector Destino -->
+      <div class="selector-group">
+        <label for="dest-select" class="selector-label">
+          <span class="step-num">2</span> Formato de Salida
+        </label>
+        <div class="select-wrapper">
+          <select id="dest-select" [ngModel]="selectedDest" (ngModelChange)="onDestChange($event)">
+            <option *ngFor="let d of destFormats" [value]="d.id">
+              {{ d.name }} ({{ d.extension }})
+            </option>
+          </select>
+        </div>
+        <span class="format-hint">{{ getFormatDescription(selectedDest, false) }}</span>
+      </div>
+    </div>
+
+    <!-- Opciones adicionales y botón de acción -->
+    <div class="formats-toolbar">
+      <div class="toolbar-left">
+        <!-- Checkbox Jupyter Notebook si el formato de destino lo soporta -->
+        <label *ngIf="isJupyterSupported()" class="jupyter-toggle" title="Genera un notebook Jupyter (.ipynb) ejecutable listo para descargar">
+          <input type="checkbox" [checked]="generateJupyter" (change)="toggleJupyter()" />
+          <span class="jupyter-icon">🪐</span>
+          <span class="jupyter-text">Generar Jupyter Notebook (.ipynb)</span>
+        </label>
+      </div>
+
+      <div class="toolbar-right">
+        <button class="btn-convert" [disabled]="isConverting" (click)="convert()" title="Convertir código (Ctrl+Enter)">
+          <span *ngIf="isConverting" class="spinner-icon"></span>
+          <svg *ngIf="!isConverting" xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+            stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polygon points="5 3 19 12 5 21 5 3"></polygon>
+          </svg>
+          <span>{{ isConverting ? 'Traduciendo...' : 'Convertir' }}</span>
+          <span class="shortcut-tag">⌘↵</span>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Banner de Pipeline si la conversión pasó por intermediario (ej. Quirk -> QASM -> Qiskit) -->
+  <div class="pipeline-banner glass-card" *ngIf="result?.pipeline && (result?.pipeline?.length || 0) > 1">
+    <div class="pipeline-icon">
+      <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+        <circle cx="6" cy="6" r="3"></circle>
+        <circle cx="18" cy="18" r="3"></circle>
+        <line x1="8.59" y1="8.59" x2="15.42" y2="15.42"></line>
+      </svg>
+    </div>
+    <div class="pipeline-content">
+      <span class="pipeline-title">Pipeline de traducción en q-convert-api:</span>
+      <div class="pipeline-steps">
+        <span *ngFor="let step of result?.pipeline; let isLast = last" class="pipeline-step-wrap">
+          <span class="pipeline-pill">{{ step | uppercase }}</span>
+          <span *ngIf="!isLast" class="pipeline-arrow">➔</span>
+        </span>
+      </div>
+    </div>
+  </div>
+
+  <!-- Mensaje de Error si la sintaxis del circuito no es válida o la API falló -->
+  <div class="alert alert-danger" *ngIf="conversionError">
+    <div class="alert-content">
+      <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none"
+        stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="alert-icon">
+        <circle cx="12" cy="12" r="10"></circle>
+        <line x1="12" y1="8" x2="12" y2="12"></line>
+        <line x1="12" y1="16" x2="12.01" y2="16"></line>
+      </svg>
+      <div class="error-details">
+        <pre class="error-pre">{{ conversionError }}</pre>
+        <div *ngIf="apiConnected === false" class="api-help-tip">
+          💡 <strong>Sugerencia:</strong> El microservicio <code>q-convert-api</code> debe estar en ejecución en <code>http://localhost:3000</code>. Ejecuta <code>npm start</code> en la carpeta <code>q-convert-api 2</code> o levántalo con Docker.
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Contenedor Principal: Entrada y Salida Lado a Lado -->
+  <div class="workspace-grid">
+    <!-- Panel Entrada -->
+    <div class="glass-card editor-panel">
+      <div class="panel-header">
+        <div class="panel-title-info">
+          <span class="panel-tag">Entrada</span>
+          <h3>Código {{ selectedSource.toUpperCase() }}</h3>
+        </div>
+        <div class="panel-actions">
+          <button *ngIf="selectedSource === 'quirk'" class="glass-btn-secondary btn-quirk-link" (click)="openInQuirk()" title="Abrir Quirk Simulator">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+              <polyline points="15 3 21 3 21 9"></polyline>
+              <line x1="10" y1="14" x2="21" y2="3"></line>
+            </svg>
+            Abrir Quirk
+          </button>
+          <button class="btn-clear" (click)="codeInput = ''; convert()" title="Limpiar código">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="3 6 5 6 21 6"></polyline>
+              <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+            </svg>
+            Limpiar
+          </button>
+        </div>
+      </div>
+
+      <div class="textarea-wrapper">
+        <textarea
+          class="code-editor"
+          [ngModel]="codeInput"
+          (ngModelChange)="onCodeChange($event)"
+          (keydown.control.enter)="convert(); $event.preventDefault()"
+          (keydown.meta.enter)="convert(); $event.preventDefault()"
+          placeholder="Pega o escribe tu circuito cuántico aquí..."
+          spellcheck="false"
+        ></textarea>
+      </div>
+    </div>
+
+    <!-- Panel Salida -->
+    <div class="glass-card editor-panel">
+      <div class="panel-header">
+        <div class="panel-title-info">
+          <span class="panel-tag dest">Salida</span>
+          <h3>Resultado {{ selectedDest.toUpperCase() }}</h3>
+          <span *ngIf="generateJupyter" class="jupyter-pill">Jupyter (.ipynb)</span>
+          <span *ngIf="result?.filename" class="filename-chip" [title]="result?.filename || ''">
+            {{ result?.filename }}
+          </span>
+        </div>
+
+        <div class="panel-actions" *ngIf="result?.output">
+          <!-- Toggle vista gráfica vs código para SVG -->
+          <button
+            *ngIf="isSvgOutput"
+            class="glass-btn-secondary btn-icon-text"
+            (click)="showSvgCode = !showSvgCode"
+            [title]="showSvgCode ? 'Ver diagrama visual' : 'Ver código fuente SVG'"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="16 18 22 12 16 6"></polyline>
+              <polyline points="8 6 2 12 8 18"></polyline>
+            </svg>
+            <span>{{ showSvgCode ? 'Ver Diagrama' : 'Ver Código' }}</span>
+          </button>
+
+          <!-- Copiar salida -->
+          <button class="glass-btn-secondary btn-icon-text" (click)="copyOutput()" title="Copiar código">
+            <svg *ngIf="!copySuccess" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
+              <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
+            </svg>
+            <svg *ngIf="copySuccess" xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="#10b981" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <polyline points="20 6 9 17 4 12"></polyline>
+            </svg>
+            <span>{{ copySuccess ? '¡Copiado!' : 'Copiar' }}</span>
+          </button>
+
+          <!-- Descargar archivo -->
+          <button class="glass-btn-secondary btn-icon-text" (click)="downloadOutput()" title="Descargar archivo convertido">
+            <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none"
+              stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+              <polyline points="7 10 12 15 17 10"></polyline>
+              <line x1="12" y1="15" x2="12" y2="3"></line>
+            </svg>
+            <span>Descargar</span>
+          </button>
+        </div>
+      </div>
+
+      <div class="textarea-wrapper">
+        <!-- Overlay durante la conversión -->
+        <div class="loading-overlay" *ngIf="isConverting">
+          <div class="spinner-large"></div>
+          <span>Procesando circuito en q-convert-api...</span>
+        </div>
+
+        <!-- Renderizado visual si el destino es SVG y no estamos en modo código -->
+        <div *ngIf="isSvgOutput && safeSvg && !showSvgCode" class="svg-visualizer-container" [innerHTML]="safeSvg"></div>
+
+        <!-- Renderizado de código normal -->
+        <textarea
+          *ngIf="!isSvgOutput || showSvgCode"
+          class="code-editor output-editor"
+          [value]="result?.output || ''"
+          readonly
+          placeholder="El resultado traducido por q-convert-api aparecerá aquí..."
+          spellcheck="false"
+        ></textarea>
+      </div>
+    </div>
+  </div>
+</div>
+

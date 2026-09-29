@@ -5,7 +5,7 @@ import { BehaviorSubject, Observable, throwError, of } from 'rxjs';
 import { catchError, tap, map } from 'rxjs/operators';
 import { Router } from '@angular/router';
 
-import { Project, User, ProjectSummary, ProjectDetailsDto } from '../models/project.model';
+import { Project, User, ProjectSummary, ProjectDetailsDto, CurrentUserProfile } from '../models/project.model';
 
 export interface LoginResponse {
   token: string;
@@ -34,6 +34,11 @@ export class AuthService {
   private currentUserSubject = new BehaviorSubject<string | null>(this.getCurrentUserFromStorage());
   public currentUser$ = this.currentUserSubject.asObservable();
 
+  // In-memory user profile with role and isAdmin (NEVER persisted to browser storage to prevent tampering)
+  private currentUserProfileSubject = new BehaviorSubject<CurrentUserProfile | null>(null);
+  public currentUserProfile$ = this.currentUserProfileSubject.asObservable();
+  public isAdmin$ = this.currentUserProfileSubject.pipe(map(profile => profile?.isAdmin === true));
+
   constructor(
     private http: HttpClient,
     private router: Router,
@@ -42,6 +47,12 @@ export class AuthService {
     if (isPlatformBrowser(this.platformId)) {
       this.hasUser().subscribe(isAuthenticated => {
         this.isAuthenticatedSubject.next(isAuthenticated);
+        if (isAuthenticated) {
+          this.getUser().subscribe({
+            next: (profile) => console.log('Session user loaded:', profile?.email),
+            error: () => this.clearSession()
+          });
+        }
       });
     }
   }
@@ -147,18 +158,40 @@ export class AuthService {
     return this.http.post<any>(`${this.API_URL}/verify2FACode`, { email, code });
   }
 
-  getUser(): Observable<string> {
-    return this.http.post<string>(`${this.API_URL}/getUser`, {}, {
-      withCredentials: true,
-      responseType: 'text' as 'json'
+  getUser(): Observable<CurrentUserProfile> {
+    return this.http.post<CurrentUserProfile>(`${this.API_URL}/getUser`, {}, {
+      withCredentials: true
     }).pipe(
-      tap(user => {
-        console.log('GetUser response:', user);
-        if (user) {
-          this.setSession(user);
+      tap(userProfile => {
+        console.log('GetUser response:', userProfile);
+        if (userProfile) {
+          this.currentUserProfileSubject.next(userProfile);
+          if (userProfile.email) {
+            this.setSession(userProfile.email);
+          }
         }
       })
     );
+  }
+
+  /**
+   * Get current user profile from memory or fetch from backend
+   */
+  getUserProfile(): Observable<CurrentUserProfile | null> {
+    const current = this.currentUserProfileSubject.value;
+    if (current) {
+      return of(current);
+    }
+    return this.getUser().pipe(
+      catchError(() => of(null))
+    );
+  }
+
+  /**
+   * Check in-memory if the current user is an admin (never reads from localStorage)
+   */
+  isAdmin(): boolean {
+    return this.currentUserProfileSubject.value?.isAdmin === true;
   }
 
 
@@ -214,6 +247,7 @@ export class AuthService {
       localStorage.removeItem(this.USER_KEY);
       this.isAuthenticatedSubject.next(false);
       this.currentUserSubject.next(null);
+      this.currentUserProfileSubject.next(null);
     }
   }
 

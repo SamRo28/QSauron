@@ -11,6 +11,8 @@ import { ProjectDetailsComponent } from './components/project-details/project-de
 import { RecoveryRequestComponent } from './components/recovery-request/recovery-request.component';
 import { RecoveryValidateComponent } from './components/recovery-validate/recovery-validate.component';
 import { RecoveryResetComponent } from './components/recovery-reset/recovery-reset.component';
+import { CodeConverterComponent } from './components/code-converter/code-converter.component';
+import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
   { path: '', component: HomeComponent, pathMatch: 'full' },
@@ -22,7 +24,8 @@ export const routes: Routes = [
     canActivate: [authGuard],
     children: [
       { path: '', component: DashboardHomeComponent },
-      { path: 'project/:id', component: ProjectDetailsComponent }
+      { path: 'project/:id', component: ProjectDetailsComponent },
+      { path: 'converter', component: CodeConverterComponent, canActivate: [adminGuard] }
     ]
   },
   { path: '2fa-qr', component: Fa2QrComponent },
