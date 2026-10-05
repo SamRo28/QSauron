@@ -1,8 +1,10 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, OnInit, OnDestroy, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../../services/auth.service';
+import { ProjectEventsService } from '../../services/project-events.service';
 import { Project, ProjectSummary } from '../../models/project.model';
 import { Router, RouterModule } from '@angular/router';
+import { Subscription } from 'rxjs';
 
 @Component({
     selector: 'app-side-bar',
@@ -11,7 +13,7 @@ import { Router, RouterModule } from '@angular/router';
     templateUrl: './side-bar.component.html',
     styleUrl: './side-bar.component.css'
 })
-export class SideBarComponent implements OnInit {
+export class SideBarComponent implements OnInit, OnDestroy {
     projects: ProjectSummary[] = [];
     selectedProject: ProjectSummary | null = null;
     loading: boolean = false;
@@ -20,7 +22,9 @@ export class SideBarComponent implements OnInit {
     expandedProjects: Set<string> = new Set();
 
     private authService = inject(AuthService);
+    private projectEvents = inject(ProjectEventsService);
     private router = inject(Router);
+    private projectEventsSub?: Subscription;
 
     ngOnInit() {
         this.authService.currentUser$.subscribe(user => {
@@ -30,6 +34,14 @@ export class SideBarComponent implements OnInit {
                 this.projects = [];
             }
         });
+
+        this.projectEventsSub = this.projectEvents.projectsChanged$.subscribe(() => {
+            this.loadUserProjects();
+        });
+    }
+
+    ngOnDestroy() {
+        this.projectEventsSub?.unsubscribe();
     }
 
     loadUserProjects() {

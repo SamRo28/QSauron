@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { environment } from '../../../environments/environment';
 
 @Component({
@@ -11,6 +11,8 @@ import { environment } from '../../../environments/environment';
   styleUrl: './dashboard-home.component.css'
 })
 export class DashboardHomeComponent {
+  constructor(private router: Router) {}
+
   createQuMuProject() {
     window.location.href = `${environment.quMuUrl}`;
   }
@@ -22,4 +24,9 @@ export class DashboardHomeComponent {
   createQuTeProject() {
     window.location.href = `${environment.quTeUrl}`;
   }
+
+  goToImport() {
+    this.router.navigate(['/dashboard/import']);
+  }
 }
+

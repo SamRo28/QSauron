@@ -12,6 +12,7 @@ import { RecoveryRequestComponent } from './components/recovery-request/recovery
 import { RecoveryValidateComponent } from './components/recovery-validate/recovery-validate.component';
 import { RecoveryResetComponent } from './components/recovery-reset/recovery-reset.component';
 import { CodeConverterComponent } from './components/code-converter/code-converter.component';
+import { ProjectImportComponent } from './components/project-import/project-import.component';
 import { adminGuard } from './guards/admin.guard';
 
 export const routes: Routes = [
@@ -25,6 +26,7 @@ export const routes: Routes = [
     children: [
       { path: '', component: DashboardHomeComponent },
       { path: 'project/:id', component: ProjectDetailsComponent },
+      { path: 'import', component: ProjectImportComponent },
       { path: 'converter', component: CodeConverterComponent, canActivate: [adminGuard] }
     ]
   },
