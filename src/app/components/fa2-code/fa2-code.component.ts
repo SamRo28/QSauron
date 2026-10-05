@@ -94,7 +94,6 @@ export class Fa2Code {
   goBack(): void {
     this.router.navigate(['/login']);
   }
-
-
-
 }
+
+export { Fa2Code as Fa2CodeComponent };
