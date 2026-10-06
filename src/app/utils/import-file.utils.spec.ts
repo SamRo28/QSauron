@@ -3,7 +3,8 @@ import {
   acceptAttrFor,
   defaultProjectName,
   readCircuitFile,
-  checkBatch
+  checkBatch,
+  formatBytes
 } from './import-file.utils';
 import { ImportFormat, ImportItem, ImportLimits } from '../models/import.model';
 
@@ -17,8 +18,8 @@ describe('import-file.utils', () => {
 
   const defaultLimits: ImportLimits = {
     maxFiles: 20,
-    maxFileBytes: 524288, // 512 KB
-    maxTotalBytes: 5242880, // 5 MB
+    maxFileBytes: 2097152, // 2 MB
+    maxTotalBytes: 20971520, // 20 MB
     maxQubits: 16
   };
 
@@ -88,5 +89,19 @@ describe('import-file.utils', () => {
 
     const error = checkBatch(items, defaultLimits);
     expect(error).toBe('Too many files (maximum 20)');
+  });
+
+  it('should return error if file exceeds maxFileBytes (2 MB + 1 byte)', async () => {
+    const file = new File([new Uint8Array(2097152 + 1)], 'toolarge.qasm', { type: 'text/plain' });
+    const result = await readCircuitFile(file, qasmFormat, defaultLimits);
+
+    expect(result.item).toBeUndefined();
+    expect(result.error).toContain('2 MB');
+  });
+
+  it('should format bytes properly with formatBytes', () => {
+    expect(formatBytes(2097152)).toBe('2 MB');
+    expect(formatBytes(524288)).toBe('512 KB');
+    expect(formatBytes(1572864)).toBe('1.5 MB');
   });
 });

@@ -25,6 +25,20 @@ export function acceptAttrFor(format: ImportFormat): string {
   return format?.extensions ? format.extensions.join(',') : '';
 }
 
+export function formatBytes(bytes: number): string {
+  if (bytes >= 1048576) {
+    const mb = bytes / 1048576;
+    const formatted = parseFloat(mb.toFixed(1)).toString();
+    return `${formatted} MB`;
+  }
+  if (bytes >= 1024) {
+    const kb = bytes / 1024;
+    const formatted = parseFloat(kb.toFixed(1)).toString();
+    return `${formatted} KB`;
+  }
+  return `${bytes} bytes`;
+}
+
 export function defaultProjectName(fileName: string): string {
   if (!fileName) return 'Imported project';
   const lastDot = fileName.lastIndexOf('.');
@@ -56,7 +70,7 @@ export async function readCircuitFile(
     return { error: 'File is empty' };
   }
   if (file.size > limits.maxFileBytes) {
-    return { error: 'File exceeds 512 KB' };
+    return { error: `File exceeds ${formatBytes(limits.maxFileBytes)}` };
   }
 
   let buf: Uint8Array;

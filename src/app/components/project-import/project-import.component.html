@@ -4,30 +4,7 @@
     <div class="header-section">
       <h2>Import projects</h2>
       <p class="text-secondary">Import quantum circuits as projects from files or raw code</p>
-    </div>
-  </div>
-
-  <!-- Help & Notices Banner -->
-  <div class="glass-card help-banner">
-    <div class="help-grid">
-      <div class="help-item">
-        <span class="help-icon">ℹ️</span>
-        <div>
-          <strong>Limits:</strong> Up to {{ limits.maxFiles }} files, max {{ limits.maxFileBytes / 1024 }} KB per file, max {{ limits.maxTotalBytes / (1024 * 1024) }} MB total, max {{ limits.maxQubits }} qubits.
-        </div>
-      </div>
-      <div class="help-item" *ngIf="antivirusEnabled">
-        <span class="help-icon">🛡️</span>
-        <div><strong>Antivirus protection:</strong> Files are scanned with ClamAV antivirus upon upload.</div>
-      </div>
-      <div class="help-item">
-        <span class="help-icon">🔒</span>
-        <div><strong>Privacy:</strong> Only the file contents are sent, never the file itself.</div>
-      </div>
-      <div class="help-item warning">
-        <span class="help-icon">⚠️</span>
-        <div><strong>Note:</strong> Python code (Qiskit, Cirq, Q#…) cannot be imported. Only supported circuit interchange formats are accepted.</div>
-      </div>
+      <p class="limits-text">{{ limitsText }}</p>
     </div>
   </div>
 
@@ -66,7 +43,7 @@
         <div class="result-info">
           <div class="result-title">
             <strong>{{ item.projectName }}</strong>
-            <span class="badge badge-format">{{ item.format }}</span>
+            <span class="badge badge-format">{{ formatLabel(item.format) }}</span>
             <span class="badge badge-qubits" *ngIf="item.qubits">{{ item.qubits }} qubits</span>
           </div>
           <div class="result-error" *ngIf="!item.success">
@@ -93,20 +70,15 @@
         </div>
       </div>
 
-      <div class="formats-grid" *ngIf="!loadingFormats">
-        <button
-          type="button"
-          class="format-btn"
-          *ngFor="let fmt of formats"
-          [class.active]="selectedFormat?.id === fmt.id"
-          (click)="selectFormat(fmt)"
-        >
-          <span class="format-label">{{ fmt.label }}</span>
-          <span class="format-ext">{{ fmt.extensions.join(', ') }}</span>
-        </button>
-      </div>
-      <div class="loading-spinner" *ngIf="loadingFormats">
-        Loading supported formats…
+      <div class="selector-group">
+        <label for="import-format" class="selector-label">Circuit language</label>
+        <div class="select-wrapper">
+          <select id="import-format" [(ngModel)]="selectedFormatId" [disabled]="loadingFormats">
+            <option value="" disabled>{{ loadingFormats ? 'Loading formats…' : 'Select a language' }}</option>
+            <option *ngFor="let fmt of formats" [value]="fmt.id">{{ fmt.label }} ({{ fmt.extensions.join(', ') }})</option>
+          </select>
+        </div>
+        <span class="format-hint" *ngIf="selectedFormat">Accepted files: {{ selectedFormat.extensions.join(', ') }}</span>
       </div>
     </div>
 
@@ -220,7 +192,7 @@
       <div class="entries-table">
         <div class="entry-row" *ngFor="let entry of entries; let i = index" [class.has-error]="!!entry.error">
           <div class="entry-format">
-            <span class="badge badge-format">{{ entry.item?.format || 'unknown' }}</span>
+            <span class="badge badge-format">{{ formatLabel(entry.item?.format) }}</span>
           </div>
           <div class="entry-main">
             <div class="entry-file-info">
@@ -238,6 +210,7 @@
             <div class="entry-error-msg" *ngIf="entry.error">
               {{ entry.error }}
             </div>
+            <div class="entry-last-error-msg" *ngIf="entry.lastError && !entry.error">Previous attempt failed: {{ entry.lastError }}</div>
           </div>
           <div class="entry-action">
             <button type="button" class="btn-remove" (click)="removeEntry(i)" title="Remove">&times;</button>
@@ -257,7 +230,7 @@
           (click)="importAll()"
         >
           <span *ngIf="!importing">Import {{ validItems.length }} project(s)</span>
-          <span *ngIf="importing">Checking, scanning and converting…</span>
+          <span *ngIf="importing">Checking and converting…</span>
         </button>
       </div>
     </div>

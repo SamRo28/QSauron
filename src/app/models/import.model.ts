@@ -15,7 +15,6 @@ export interface ImportLimits {
 export interface ImportFormatsResponse {
   formats: ImportFormat[];
   limits: ImportLimits;
-  antivirusEnabled: boolean;
 }
 
 export interface ImportItem {
