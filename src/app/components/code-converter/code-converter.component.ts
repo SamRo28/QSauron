@@ -38,15 +38,15 @@ const FORMAT_METADATA: Record<string, { name: string; extension: string; descrip
     extension: '.json',
     description: 'Estructura JSON de la librería quantum-circuit'
   },
-  toaster: {
-    name: 'Quirk Toaster',
+  'qubit-toaster': {
+    name: 'Qubit Toaster',
     extension: '.json',
-    description: 'Formato exportable de Quirk Toaster'
+    description: 'JSON de Qubit Toaster (Quantastica)'
   },
   qiskit: {
     name: 'Qiskit (Python)',
     extension: '.py',
-    description: 'Código ejecutable de IBM Qiskit con AerSimulator'
+    description: 'Código Python de IBM Qiskit (como entrada, el circuito debe estar en la variable "qc")'
   },
   pyquil: {
     name: 'pyQuil (Python)',
@@ -61,7 +61,7 @@ const FORMAT_METADATA: Record<string, { name: string; extension: string; descrip
   cirq: {
     name: 'Google Cirq (Python)',
     extension: '.py',
-    description: 'Framework de algoritmos cuánticos de Google en Python'
+    description: 'Código Python de Google Cirq (como entrada, el circuito debe estar en la variable "circuit")'
   },
   tfq: {
     name: 'TensorFlow Quantum',
@@ -115,7 +115,7 @@ export class CodeConverterComponent implements OnInit, OnDestroy {
   sourceFormats: FormatMetadata[] = [];
   destFormats: FormatMetadata[] = [];
   jupyterEligibleFormats: string[] = ['qiskit', 'pyquil', 'braket', 'cirq', 'tfq', 'qsharp', 'cudaq', 'js'];
-  bridgedFormats: Record<string, string> = { quirk: 'qasm' };
+  bridgedFormats: Record<string, string> = { quirk: 'qasm', qiskit: 'qasm', cirq: 'qasm' };
 
   // Selección actual
   selectedSource: string = 'qasm';
@@ -146,6 +146,7 @@ measure q -> c;`;
   // Sujeto para auto-conversión reactiva con debounce
   private codeChangeSubject = new Subject<string>();
   private sub?: Subscription;
+  private convertSub?: Subscription;
 
   ngOnInit(): void {
     this.initDefaultFormats();
@@ -166,11 +167,12 @@ measure q -> c;`;
 
   ngOnDestroy(): void {
     this.sub?.unsubscribe();
+    this.convertSub?.unsubscribe();
   }
 
   private initDefaultFormats(): void {
-    const defaultSources = ['qasm', 'quirk', 'quil', 'qobj', 'ionq', 'quantum-circuit', 'toaster'];
-    const defaultDests = ['qiskit', 'qasm', 'svg', 'cirq', 'pyquil', 'braket', 'qsharp', 'cudaq', 'quest', 'tfq', 'js', 'qobj', 'quil', 'quantum-circuit', 'toaster', 'svg-inline'];
+    const defaultSources = ['qasm', 'quirk', 'quil', 'qobj', 'ionq', 'quantum-circuit', 'qubit-toaster', 'qiskit', 'cirq'];
+    const defaultDests = ['qiskit', 'qasm', 'svg', 'cirq', 'pyquil', 'braket', 'qsharp', 'cudaq', 'quest', 'tfq', 'js', 'qobj', 'quil', 'quantum-circuit', 'qubit-toaster', 'svg-inline'];
 
     this.sourceFormats = defaultSources.map(id => this.buildMetadata(id, true, defaultDests.includes(id)));
     this.destFormats = defaultDests.map(id => this.buildMetadata(id, defaultSources.includes(id), true));
@@ -294,7 +296,8 @@ measure q -> c;`;
       jupyter: this.isJupyterSupported() ? this.generateJupyter : false
     };
 
-    this.converterService.convertSingle(req).subscribe({
+    this.convertSub?.unsubscribe();
+    this.convertSub = this.converterService.convertSingle(req).subscribe({
       next: (res) => {
         this.result = res;
         this.isConverting = false;
@@ -382,6 +385,29 @@ creg c[2];
 h q[0];
 cx q[0], q[1];
 measure q -> c;`;
+        break;
+
+      case 'qiskit':
+        this.codeInput = `from qiskit import QuantumCircuit
+
+# Estado de Bell (|00> + |11>) / sqrt(2)
+qc = QuantumCircuit(2, 2)
+qc.h(0)
+qc.cx(0, 1)
+qc.measure([0, 1], [0, 1])`;
+        break;
+
+      case 'cirq':
+        this.codeInput = `import cirq
+
+q = cirq.LineQubit.range(2)
+
+# Estado de Bell (|00> + |11>) / sqrt(2)
+circuit = cirq.Circuit(
+    cirq.H(q[0]),
+    cirq.CNOT(q[0], q[1]),
+    cirq.measure(*q, key='c'),
+)`;
         break;
 
       case 'quirk':

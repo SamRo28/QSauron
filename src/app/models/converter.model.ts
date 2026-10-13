@@ -2,6 +2,8 @@ export interface FormatsResponse {
   sourceFormats: string[];
   bridgedSourceFormats?: Record<string, string>;
   destFormats: string[];
+  bridgedDestFormats?: Record<string, string>;
+  formatLabels?: Record<string, string>;
   jupyterEligibleDestFormats: string[];
 }
 
