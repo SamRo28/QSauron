@@ -29,10 +29,7 @@
             "styles": [
               "src/styles.css"
             ],
-            "scripts": [],
-            "allowedCommonJsDependencies": [
-              "quantum-circuit/dist/quantum-circuit.min.js"
-            ]
+            "scripts": []
           },
           "configurations": {
             "production": {
