@@ -7,104 +7,6 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 import { ConverterService } from '../../services/converter.service';
 import { FormatMetadata, SingleConvertResponse } from '../../models/converter.model';
 
-const FORMAT_METADATA: Record<string, { name: string; extension: string; description: string }> = {
-  qasm: {
-    name: 'OpenQASM (2.0 / 3.0)',
-    extension: '.qasm',
-    description: 'Estándar abierto para circuitos cuánticos (IBM/OpenQASM). Como entrada acepta 2.0 y 3.x'
-  },
-  qasm3: {
-    name: 'OpenQASM 3.0',
-    extension: '.qasm',
-    description: 'OpenQASM 3: conserva las puertas definidas con gate (oráculos)'
-  },
-  quirk: {
-    name: 'Quirk Simulator',
-    extension: '.json',
-    description: 'Formato JSON o URL interactiva de Quirk (formato puente)'
-  },
-  quil: {
-    name: 'pyQuil / Quil',
-    extension: '.quil',
-    description: 'Lenguaje de instrucciones cuánticas de Rigetti Computing'
-  },
-  qobj: {
-    name: 'IBM Qobj',
-    extension: '.json',
-    description: 'Especificación JSON de tareas para IBM Quantum'
-  },
-  ionq: {
-    name: 'IonQ',
-    extension: '.json',
-    description: 'Especificación JSON de circuitos para procesadores de iones atrapados IonQ'
-  },
-  'quantum-circuit': {
-    name: 'Quantum Circuit JS',
-    extension: '.json',
-    description: 'Estructura JSON de la librería quantum-circuit'
-  },
-  'qubit-toaster': {
-    name: 'Qubit Toaster',
-    extension: '.json',
-    description: 'JSON de Qubit Toaster (Quantastica)'
-  },
-  qiskit: {
-    name: 'Qiskit (Python)',
-    extension: '.py',
-    description: 'Código Python de IBM Qiskit (como entrada, el circuito debe estar en la variable "qc")'
-  },
-  pyquil: {
-    name: 'pyQuil (Python)',
-    extension: '.py',
-    description: 'Código ejecutable de Rigetti pyQuil'
-  },
-  braket: {
-    name: 'AWS Braket (Python)',
-    extension: '.py',
-    description: 'Amazon Braket Quantum SDK en Python'
-  },
-  cirq: {
-    name: 'Google Cirq (Python)',
-    extension: '.py',
-    description: 'Código Python de Google Cirq (como entrada, el circuito debe estar en la variable "circuit")'
-  },
-  tfq: {
-    name: 'TensorFlow Quantum',
-    extension: '.py',
-    description: 'Librería cuántica de aprendizaje automático de Google'
-  },
-  qsharp: {
-    name: 'Q# (Microsoft)',
-    extension: '.qs',
-    description: 'Microsoft Quantum Development Kit (Q#)'
-  },
-  quest: {
-    name: 'QuEST (C)',
-    extension: '.c',
-    description: 'Quantum Exact Simulation Toolkit en C/C++'
-  },
-  cudaq: {
-    name: 'NVIDIA CUDA-Q (C++)',
-    extension: '.cpp',
-    description: 'Plataforma híbrida CPU/GPU/QPU acelerada de NVIDIA'
-  },
-  js: {
-    name: 'JavaScript',
-    extension: '.js',
-    description: 'Simulación del circuito cuántico en JavaScript nativo'
-  },
-  svg: {
-    name: 'Diagrama SVG',
-    extension: '.svg',
-    description: 'Representación gráfica vectorial del circuito'
-  },
-  'svg-inline': {
-    name: 'SVG (En línea)',
-    extension: '.svg',
-    description: 'Diagrama vectorial SVG sin envoltorios XML'
-  }
-};
-
 @Component({
   selector: 'app-code-converter',
   standalone: true,
@@ -119,8 +21,12 @@ export class CodeConverterComponent implements OnInit, OnDestroy {
   // Formatos soportados
   sourceFormats: FormatMetadata[] = [];
   destFormats: FormatMetadata[] = [];
-  jupyterEligibleFormats: string[] = ['qiskit', 'pyquil', 'braket', 'cirq', 'tfq', 'qsharp', 'cudaq', 'js'];
-  bridgedFormats: Record<string, string> = { quirk: 'qasm', qasm3: 'qasm', qiskit: 'qasm', cirq: 'qasm' };
+  jupyterEligibleFormats: string[] = [];
+  bridgedFormats: Record<string, string> = {};
+  formatLabels: Record<string, string> = {};
+  formatExtensions: Record<string, string[]> = {};
+  formatDescriptions: Record<string, string> = {};
+  catalogLoaded = false;
 
   // Selección actual
   selectedSource: string = 'qasm';
@@ -154,9 +60,7 @@ measure q -> c;`;
   private convertSub?: Subscription;
 
   ngOnInit(): void {
-    this.initDefaultFormats();
     this.loadCatalogFromApi();
-    this.checkHealth();
 
     // Auto-conversión suave tras 700ms de inactividad al teclear
     this.sub = this.codeChangeSubject.pipe(
@@ -165,9 +69,6 @@ measure q -> c;`;
     ).subscribe(() => {
       this.convert();
     });
-
-    // Conversión inicial
-    this.convert();
   }
 
   ngOnDestroy(): void {
@@ -175,29 +76,16 @@ measure q -> c;`;
     this.convertSub?.unsubscribe();
   }
 
-  private initDefaultFormats(): void {
-    const defaultSources = ['qasm', 'qasm3', 'quirk', 'quil', 'qobj', 'ionq', 'quantum-circuit', 'qubit-toaster', 'qiskit', 'cirq'];
-    const defaultDests = ['qiskit', 'qasm', 'qasm3', 'quirk', 'svg', 'cirq', 'pyquil', 'braket', 'qsharp', 'cudaq', 'quest', 'tfq', 'js', 'qobj', 'quil', 'quantum-circuit', 'qubit-toaster', 'svg-inline'];
-
-    this.sourceFormats = defaultSources.map(id => this.buildMetadata(id, true, defaultDests.includes(id)));
-    this.destFormats = defaultDests.map(id => this.buildMetadata(id, defaultSources.includes(id), true));
-  }
-
   private buildMetadata(id: string, isSource: boolean, isDest: boolean): FormatMetadata {
-    const meta = FORMAT_METADATA[id] || {
-      name: id.toUpperCase(),
-      extension: `.${id}`,
-      description: `Formato ${id}`
-    };
     return {
       id,
-      name: meta.name,
-      extension: meta.extension,
+      name: this.formatLabels[id] ?? id,
+      extension: this.formatExtensions[id]?.[0] ?? '',
       isSource,
       isDest,
       supportsJupyter: this.jupyterEligibleFormats.includes(id),
       isBridged: !!this.bridgedFormats[id],
-      description: meta.description
+      description: this.formatDescriptions[id] ?? ''
     };
   }
 
@@ -205,6 +93,9 @@ measure q -> c;`;
     this.converterService.getFormats().subscribe({
       next: (resp) => {
         this.apiConnected = true;
+        this.formatLabels = resp.formatLabels ?? {};
+        this.formatExtensions = resp.formatExtensions ?? {};
+        this.formatDescriptions = resp.formatDescriptions ?? {};
         if (resp.jupyterEligibleDestFormats) {
           this.jupyterEligibleFormats = resp.jupyterEligibleDestFormats;
         }
@@ -231,9 +122,16 @@ measure q -> c;`;
         if (!this.destFormats.some(f => f.id === this.selectedDest)) {
           this.selectedDest = this.destFormats[0]?.id || 'qiskit';
         }
+
+        // La conversión inicial espera a tener catálogo
+        if (!this.catalogLoaded) {
+          this.catalogLoaded = true;
+          this.convert();
+        }
       },
       error: () => {
         this.apiConnected = false;
+        this.conversionError = 'Code converter is not available';
       }
     });
   }

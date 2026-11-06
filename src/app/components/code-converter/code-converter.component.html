@@ -13,13 +13,13 @@
         <div>
           <div class="title-with-badge">
             <h2>Traductor de Circuitos Cuánticos</h2>
-            <div class="api-badge" [class.connected]="apiConnected === true" [class.disconnected]="apiConnected === false" [title]="apiConnected === true ? 'Microservicio q-convert-api conectado y listo' : 'No se pudo conectar con q-convert-api en el puerto 3000'">
+            <div class="api-badge" [class.connected]="apiConnected === true" [class.disconnected]="apiConnected === false" [title]="apiConnected === true ? 'Microservicio q-convert-api conectado y listo' : 'Code converter is not available'">
               <span class="status-dot"></span>
               <span>{{ apiConnected === true ? 'API Conectada' : (apiConnected === false ? 'API Desconectada' : 'Verificando API...') }}</span>
             </div>
           </div>
           <p class="header-desc">
-            Microservicio externo <strong>q-convert-api</strong>: traduce circuitos entre OpenQASM, Quirk, Qiskit y Cirq (aceptados también como entrada), Quil, Braket, Q#, CUDA-Q, SVG y Jupyter Notebooks.
+            Microservicio <strong>q-convert-api</strong> (a través de reper): traduce circuitos entre OpenQASM, Quirk, Qiskit y Cirq (aceptados también como entrada), Quil, Braket, Q#, CUDA-Q, SVG y Jupyter Notebooks.
           </p>
         </div>
       </div>
@@ -57,6 +57,7 @@
         </label>
         <div class="select-wrapper">
           <select id="source-select" [ngModel]="selectedSource" (ngModelChange)="onSourceChange($event)">
+            <option *ngIf="sourceFormats.length === 0" value="" disabled>Loading formats…</option>
             <option *ngFor="let s of sourceFormats" [value]="s.id">
               {{ s.name }} ({{ s.extension }}) {{ s.isBridged ? '★ Puente' : '' }}
             </option>
@@ -81,6 +82,7 @@
         </label>
         <div class="select-wrapper">
           <select id="dest-select" [ngModel]="selectedDest" (ngModelChange)="onDestChange($event)">
+            <option *ngIf="destFormats.length === 0" value="" disabled>Loading formats…</option>
             <option *ngFor="let d of destFormats" [value]="d.id">
               {{ d.name }} ({{ d.extension }})
             </option>
@@ -148,7 +150,7 @@
       <div class="error-details">
         <pre class="error-pre">{{ conversionError }}</pre>
         <div *ngIf="apiConnected === false" class="api-help-tip">
-          💡 <strong>Sugerencia:</strong> El microservicio <code>q-convert-api</code> debe estar en ejecución en <code>http://localhost:3000</code>. Ejecuta <code>npm start</code> en la carpeta <code>q-convert-api 2</code> o levántalo con Docker.
+          💡 <strong>Sugerencia:</strong> reper no llega al microservicio <code>q-convert-api</code> (<code>app.qconvert.url</code>). Comprueba que está en ejecución.
         </div>
       </div>
     </div>
