@@ -9,9 +9,14 @@ import { FormatMetadata, SingleConvertResponse } from '../../models/converter.mo
 
 const FORMAT_METADATA: Record<string, { name: string; extension: string; description: string }> = {
   qasm: {
-    name: 'OpenQASM (2.0)',
+    name: 'OpenQASM (2.0 / 3.0)',
     extension: '.qasm',
-    description: 'Estándar abierto para circuitos cuánticos (IBM/OpenQASM)'
+    description: 'Estándar abierto para circuitos cuánticos (IBM/OpenQASM). Como entrada acepta 2.0 y 3.x'
+  },
+  qasm3: {
+    name: 'OpenQASM 3.0',
+    extension: '.qasm',
+    description: 'OpenQASM 3: conserva las puertas definidas con gate (oráculos)'
   },
   quirk: {
     name: 'Quirk Simulator',
@@ -115,7 +120,7 @@ export class CodeConverterComponent implements OnInit, OnDestroy {
   sourceFormats: FormatMetadata[] = [];
   destFormats: FormatMetadata[] = [];
   jupyterEligibleFormats: string[] = ['qiskit', 'pyquil', 'braket', 'cirq', 'tfq', 'qsharp', 'cudaq', 'js'];
-  bridgedFormats: Record<string, string> = { quirk: 'qasm', qiskit: 'qasm', cirq: 'qasm' };
+  bridgedFormats: Record<string, string> = { quirk: 'qasm', qasm3: 'qasm', qiskit: 'qasm', cirq: 'qasm' };
 
   // Selección actual
   selectedSource: string = 'qasm';
@@ -171,8 +176,8 @@ measure q -> c;`;
   }
 
   private initDefaultFormats(): void {
-    const defaultSources = ['qasm', 'quirk', 'quil', 'qobj', 'ionq', 'quantum-circuit', 'qubit-toaster', 'qiskit', 'cirq'];
-    const defaultDests = ['qiskit', 'qasm', 'svg', 'cirq', 'pyquil', 'braket', 'qsharp', 'cudaq', 'quest', 'tfq', 'js', 'qobj', 'quil', 'quantum-circuit', 'qubit-toaster', 'svg-inline'];
+    const defaultSources = ['qasm', 'qasm3', 'quirk', 'quil', 'qobj', 'ionq', 'quantum-circuit', 'qubit-toaster', 'qiskit', 'cirq'];
+    const defaultDests = ['qiskit', 'qasm', 'qasm3', 'quirk', 'svg', 'cirq', 'pyquil', 'braket', 'qsharp', 'cudaq', 'quest', 'tfq', 'js', 'qobj', 'quil', 'quantum-circuit', 'qubit-toaster', 'svg-inline'];
 
     this.sourceFormats = defaultSources.map(id => this.buildMetadata(id, true, defaultDests.includes(id)));
     this.destFormats = defaultDests.map(id => this.buildMetadata(id, defaultSources.includes(id), true));
@@ -385,6 +390,26 @@ creg c[2];
 h q[0];
 cx q[0], q[1];
 measure q -> c;`;
+        break;
+
+      case 'qasm3':
+        this.codeInput = `OPENQASM 3.0;
+include "stdgates.inc";
+
+// Oráculo definido con gate: en Quirk se dibuja como una caja
+gate oracle a, b, c {
+  ccx a, b, c;
+}
+
+qubit[3] q;
+bit[3] c;
+
+h q[0];
+h q[1];
+x q[2];
+h q[2];
+oracle q[0], q[1], q[2];
+c = measure q;`;
         break;
 
       case 'qiskit':
