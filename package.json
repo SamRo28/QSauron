@@ -10,6 +10,7 @@
     "serve:ssr:nombre-del-proyecto": "node dist/nombre-del-proyecto/server/server.mjs"
   },
   "private": true,
+  "license": "MIT",
   "dependencies": {
     "@angular/animations": "^19.0.0",
     "@angular/common": "^19.0.0",
