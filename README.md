@@ -24,7 +24,6 @@
 - [Testing](#testing)
 - [QSauron ecosystem](#qsauron-ecosystem)
 - [Roadmap](#roadmap)
-- [Contributing](#contributing)
 - [License](#license)
 
 ## Overview
@@ -174,10 +173,6 @@ flowchart LR
 - [ ] Rename the npm package from `nombre-del-proyecto` to `qsauron-frontend`
 - [ ] Publish screenshots and a short demo GIF
 - [ ] Internationalization (i18n)
-
-## Contributing
-
-Contributions are welcome — see [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## License
 
